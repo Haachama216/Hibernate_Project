@@ -1,10 +1,8 @@
 package com.hibernate.gui;
 
-
-import com.hibernate.HibernateUtil;
 import com.hibernate.dao.GiaovuAccountDAO;
 import com.hibernate.pojo.GiaovuAccountEntity;
-import org.hibernate.Session;
+import com.hibernate.gui.tablemodel.GiaovuAccountModel;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -31,6 +29,7 @@ public class Register extends JFrame {
 	private JTextField phoneField;
 	private JTextField emailField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private GiaovuAccountModel model;
 
 	/**
 	 * Launch the application.
@@ -39,7 +38,9 @@ public class Register extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Register() {
+	public Register(GiaovuAccountModel model) {
+		this.model = model;
+
 		setResizable(false);
 		setBounds(100, 100, 312, 347);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -215,6 +216,8 @@ public class Register extends JFrame {
 				account.setEmail(emailField.getText());
 				account.setSex(buttonGroup.getSelection().getActionCommand());
 				GiaovuAccountDAO.Save(account);
+				if (model != null)
+					model.AddRow(account);
 				dispose();
 			}
 		});

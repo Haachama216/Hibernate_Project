@@ -1,6 +1,7 @@
 package com.hibernate.gui;
 
 import com.hibernate.dao.GiaovuAccountDAO;
+import com.hibernate.gui.tablemodel.GiaovuAccountModel;
 import com.hibernate.pojo.GiaovuAccountEntity;
 
 import java.awt.Font;
@@ -24,6 +25,7 @@ public class ChangePassword extends JFrame {
 	private JButton cancle;
 
 	private GiaovuAccountEntity account;
+	private JTable giaovuTable;
 	/**
 	 * Launch the application.
 	 */
@@ -31,8 +33,9 @@ public class ChangePassword extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public ChangePassword(GiaovuAccountEntity account) {
+	public ChangePassword(GiaovuAccountEntity account, JTable table) {
 		this.account = account;
+		giaovuTable = table;
 
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 309, 180);
@@ -120,6 +123,7 @@ public class ChangePassword extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				account.setPassword(new String(passwordField_1.getPassword()));
 				GiaovuAccountDAO.Update(account);
+				giaovuTable.setModel(new GiaovuAccountModel());
 				JOptionPane.showMessageDialog(null,"Your password has been updated",
 						"Successfully",JOptionPane.INFORMATION_MESSAGE);
 				dispose();
