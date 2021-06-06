@@ -18,10 +18,14 @@
         <property name="show_sql">true</property> <!-- Show SQL in console -->
         <property name="format_sql">true</property> <!-- Show SQL formatted -->
 
-        <mapping resource="StudentsEntity.hbm.xml"/>
-        <mapping resource="StudentDetailEntity.hbm.xml"/>
         <mapping resource="Account.hbm.xml"/>
         <mapping resource="ThongTinGiaoVu.hbm.xml"/>
+        <mapping resource="ClassEntity.hbm.xml"/>
+        <mapping resource="CourseRegisSessionEntity.hbm.xml"/>
+        <mapping resource="GiaovuAccountEntity.hbm.xml"/>
+        <mapping resource="SemesterEntity.hbm.xml"/>
+        <mapping resource="StudentEntity.hbm.xml"/>
+        <mapping resource="SubjectEntity.hbm.xml"/>
 
     </session-factory>
 </hibernate-configuration>

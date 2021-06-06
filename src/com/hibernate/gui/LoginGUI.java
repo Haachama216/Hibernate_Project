@@ -17,8 +17,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.hibernate.dao.AccountDAO;
-import com.hibernate.pojo.Account;
+import com.hibernate.dao.GiaovuAccountDAO;
+import com.hibernate.pojo.GiaovuAccountEntity;
 
 public class LoginGUI extends JFrame {
 
@@ -41,31 +41,35 @@ public class LoginGUI extends JFrame {
 	public LoginGUI() {
 		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 267, 200);
+		setBounds(100, 100, 297, 212);
+		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
-		JPanel panel = new JPanel();
-		contentPane.add(panel, BorderLayout.SOUTH);
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
+		JPanel buttonPanel = new JPanel();
+		contentPane.add(buttonPanel, BorderLayout.SOUTH);
+		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
 		JButton login = new JButton("login");
 		login.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Account account = AccountDAO.GetAccount(usernameField.getText(), new String(passwordField.getPassword()));
+				String username = usernameField.getText();
+				String password = new String(passwordField.getPassword());
+				GiaovuAccountEntity account = GiaovuAccountDAO.Get(username,password);
 				if (account == null) {
-					JOptionPane.showMessageDialog(login, "Your username or password is incorrect","ERROR",JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(null,
+							"Your username or password is not correct, please try again","Login error",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					JOptionPane.showMessageDialog(login,"Welcome " + account.getInfo().getName(), "Info", JOptionPane.INFORMATION_MESSAGE);
+					MainFrame mainframe = new MainFrame(account);
+					mainframe.setVisible(true);
 				}
-
 			}
 		});
-		panel.add(login);
+		buttonPanel.add(login);
 
 		JButton register = new JButton("register");
 		register.addActionListener(new ActionListener() {
@@ -76,32 +80,40 @@ public class LoginGUI extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		panel.add(register);
+		buttonPanel.add(register);
 
-		JPanel panel_1 = new JPanel();
-		contentPane.add(panel_1, BorderLayout.CENTER);
-		FlowLayout fl_panel_1 = new FlowLayout(FlowLayout.LEADING, 10, 10);
-		panel_1.setLayout(fl_panel_1);
+		JPanel loginPanel = new JPanel();
+		contentPane.add(loginPanel, BorderLayout.CENTER);
+		FlowLayout fl_loginPanel = new FlowLayout(FlowLayout.LEADING, 10, 10);
+		loginPanel.setLayout(fl_loginPanel);
 
 		JLabel username = new JLabel("Username");
 		username.setFont(new Font("Cascadia Code", Font.BOLD, 12));
 		username.setHorizontalAlignment(SwingConstants.CENTER);
-		panel_1.add(username);
+		loginPanel.add(username);
 
 		usernameField = new JTextField();
-		panel_1.add(usernameField);
+		loginPanel.add(usernameField);
 		usernameField.setColumns(15);
 
 		JLabel password = new JLabel("Password");
 		password.setFont(new Font("Cascadia Code", Font.BOLD, 12));
-		panel_1.add(password);
+		loginPanel.add(password);
 
 		passwordField = new JPasswordField();
 		passwordField.setColumns(15);
-		panel_1.add(passwordField);
+		loginPanel.add(passwordField);
 
 		JCheckBox showpassword = new JCheckBox("Show password");
-		panel_1.add(showpassword);
+		showpassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (showpassword.isSelected())
+					passwordField.setEchoChar('\0');
+				else
+					passwordField.setEchoChar('*');
+			}
+		});
+		loginPanel.add(showpassword);
 	}
 
 }

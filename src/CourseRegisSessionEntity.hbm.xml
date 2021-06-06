@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.hibernate.pojo.CourseRegisSessionEntity" table="course_regis_session" schema="public"
+           catalog="My_Database">
+        <id name="courseRegisId">
+            <column name="course_regis_id" sql-type="integer"/>
+            <generator class="foreign">
+                <param name="property">semester</param>
+            </generator>
+        </id>
+        <one-to-one name="semester" class="com.hibernate.pojo.SemesterEntity" constrained="true"></one-to-one>
+        <property name="ngaybatdau">
+            <column name="ngaybatdau" sql-type="varchar(5)" length="5"/>
+        </property>
+        <property name="ngaykethuc">
+            <column name="ngaykethuc" sql-type="varchar(5)" length="5"/>
+        </property>
+    </class>
+</hibernate-mapping>

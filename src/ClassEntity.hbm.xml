@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.hibernate.pojo.ClassEntity" table="class" schema="public" catalog="My_Database">
+        <id name="classid">
+            <column name="classid" sql-type="integer"/>
+            <generator class="identity"></generator>
+        </id>
+        <property name="tongsinhvien">
+            <column name="tongsinhvien" sql-type="integer"/>
+        </property>
+        <property name="tongsinhvienNam">
+            <column name="tongsinhvien_nam" sql-type="integer"/>
+        </property>
+        <property name="tongsinhvienNu">
+            <column name="tongsinhvien_nu" sql-type="integer"/>
+        </property>
+        <set name="studentList" table="student" lazy="true" inverse="true" cascade="all">
+            <key>
+                <column name="classid" not-null="true"/>
+            </key>
+            <one-to-many class="com.hibernate.pojo.StudentEntity"/>
+        </set>
+    </class>
+</hibernate-mapping>

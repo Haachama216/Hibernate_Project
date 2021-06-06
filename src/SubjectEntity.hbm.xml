@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.hibernate.pojo.SubjectEntity" table="subject" schema="public" catalog="My_Database">
+        <id name="subjectid">
+            <column name="subjectid" sql-type="integer"/>
+            <generator class="identity"></generator>
+        </id>
+        <many-to-one name="semester" class="com.hibernate.pojo.SemesterEntity">
+            <column name="hk_id" not-null="true"/>
+        </many-to-one>
+        <property name="mamh">
+            <column name="mamh" sql-type="varchar(10)" length="10"/>
+        </property>
+        <property name="tenmh">
+            <column name="tenmh" sql-type="varchar(30)" length="30"/>
+        </property>
+        <property name="sotinchi">
+            <column name="sotinchi" sql-type="integer"/>
+        </property>
+    </class>
+</hibernate-mapping>

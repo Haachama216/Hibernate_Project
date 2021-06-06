@@ -5,6 +5,8 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -18,21 +20,28 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
 
-public class MainFrame extends JFrame {
-	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
+import com.hibernate.dao.GiaovuAccountDAO;
+import com.hibernate.pojo.GiaovuAccountEntity;
 
+public class MainFrame extends JFrame {
+	private GiaovuAccountEntity logged_account;
+	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JTextField nameField;
+	private JTextField facultyField;
+	private JTextField phoneField;
+	private JTextField emailField;
+	private JRadioButton male;
+	private JRadioButton female;
 	/**
 	 * Launch the application.
 	 */
 	
-	/**
+	/**male
 	 * Create the frame.
 	 */
-	public MainFrame() {
+	public MainFrame(GiaovuAccountEntity logged_account) {
+		this.logged_account = logged_account;
+
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1087, 735);
 		getContentPane().setLayout(new BorderLayout(0, 0));
@@ -82,15 +91,16 @@ public class MainFrame extends JFrame {
 		gbc_lblNewLabel.gridy = 0;
 		panel_1.add(lblNewLabel, gbc_lblNewLabel);
 		
-		textField = new JTextField();
+		nameField = new JTextField();
+		nameField.setText(logged_account.getName());
 		GridBagConstraints gbc_textField = new GridBagConstraints();
 		gbc_textField.insets = new Insets(20, 30, 10, 5);
 		gbc_textField.anchor = GridBagConstraints.WEST;
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 1;
 		gbc_textField.gridy = 0;
-		panel_1.add(textField, gbc_textField);
-		textField.setColumns(20);
+		panel_1.add(nameField, gbc_textField);
+		nameField.setColumns(20);
 		
 		JLabel lblNewLabel_1 = new JLabel("Khoa");
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
@@ -99,15 +109,15 @@ public class MainFrame extends JFrame {
 		gbc_lblNewLabel_1.gridy = 1;
 		panel_1.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
-		textField_1 = new JTextField();
+		facultyField = new JTextField(logged_account.getFaculty());
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
 		gbc_textField_1.insets = new Insets(10, 30, 10, 5);
 		gbc_textField_1.anchor = GridBagConstraints.WEST;
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridx = 1;
 		gbc_textField_1.gridy = 1;
-		panel_1.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(20);
+		panel_1.add(facultyField, gbc_textField_1);
+		facultyField.setColumns(20);
 		
 		JLabel lblNewLabel_2 = new JLabel("\u0110i\u1EC7n Tho\u1EA1i");
 		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
@@ -116,14 +126,14 @@ public class MainFrame extends JFrame {
 		gbc_lblNewLabel_2.gridy = 2;
 		panel_1.add(lblNewLabel_2, gbc_lblNewLabel_2);
 		
-		textField_2 = new JTextField();
+		phoneField = new JTextField(logged_account.getPhonenumber());
 		GridBagConstraints gbc_textField_2 = new GridBagConstraints();
 		gbc_textField_2.insets = new Insets(10, 30, 10, 5);
 		gbc_textField_2.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_2.gridx = 1;
 		gbc_textField_2.gridy = 2;
-		panel_1.add(textField_2, gbc_textField_2);
-		textField_2.setColumns(20);
+		panel_1.add(phoneField, gbc_textField_2);
+		phoneField.setColumns(20);
 		
 		JLabel lblNewLabel_3 = new JLabel("Email");
 		GridBagConstraints gbc_lblNewLabel_3 = new GridBagConstraints();
@@ -132,31 +142,35 @@ public class MainFrame extends JFrame {
 		gbc_lblNewLabel_3.gridy = 3;
 		panel_1.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
-		textField_3 = new JTextField();
+		emailField = new JTextField(logged_account.getEmail());
 		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
 		gbc_textField_3.insets = new Insets(10, 30, 10, 5);
 		gbc_textField_3.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_3.gridx = 1;
 		gbc_textField_3.gridy = 3;
-		panel_1.add(textField_3, gbc_textField_3);
-		textField_3.setColumns(20);
+		panel_1.add(emailField, gbc_textField_3);
+		emailField.setColumns(20);
 		
-		JRadioButton rdbtnNewRadioButton = new JRadioButton("Male");
-		buttonGroup.add(rdbtnNewRadioButton);
+		male = new JRadioButton("Male");
+		male.setActionCommand(male.getText());
+		buttonGroup.add(male);
 		GridBagConstraints gbc_rdbtnNewRadioButton = new GridBagConstraints();
 		gbc_rdbtnNewRadioButton.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnNewRadioButton.gridx = 0;
 		gbc_rdbtnNewRadioButton.gridy = 5;
-		panel_1.add(rdbtnNewRadioButton, gbc_rdbtnNewRadioButton);
+		panel_1.add(male, gbc_rdbtnNewRadioButton);
 		
-		JRadioButton rdbtnNewRadioButton_1 = new JRadioButton("Female");
-		buttonGroup.add(rdbtnNewRadioButton_1);
+		female = new JRadioButton("Female");
+		female.setActionCommand(female.getText());
+		buttonGroup.add(female);
 		GridBagConstraints gbc_rdbtnNewRadioButton_1 = new GridBagConstraints();
 		gbc_rdbtnNewRadioButton_1.insets = new Insets(0, 0, 5, 5);
 		gbc_rdbtnNewRadioButton_1.gridx = 1;
 		gbc_rdbtnNewRadioButton_1.gridy = 5;
-		panel_1.add(rdbtnNewRadioButton_1, gbc_rdbtnNewRadioButton_1);
-		
+		panel_1.add(female, gbc_rdbtnNewRadioButton_1);
+
+		SetSelectedButton(logged_account.getSex());
+
 		JPanel panel_6 = new JPanel();
 		GridBagConstraints gbc_panel_6 = new GridBagConstraints();
 		gbc_panel_6.gridwidth = 2;
@@ -167,25 +181,52 @@ public class MainFrame extends JFrame {
 		panel_1.add(panel_6, gbc_panel_6);
 		panel_6.setLayout(new BoxLayout(panel_6, BoxLayout.X_AXIS));
 		
-		JButton btnNewButton = new JButton("Edit");
-		panel_6.add(btnNewButton);
+		JButton edit = new JButton("Edit");
+		edit.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				logged_account.setName(nameField.getText());
+				logged_account.setFaculty(facultyField.getText());
+				logged_account.setSex(buttonGroup.getSelection().getActionCommand());
+				logged_account.setPhonenumber(phoneField.getText());
+				logged_account.setEmail(emailField.getText());
+				GiaovuAccountDAO.Update(logged_account);
+			}
+		});
+		panel_6.add(edit);
 		
 		Component horizontalGlue_1 = Box.createHorizontalGlue();
 		panel_6.add(horizontalGlue_1);
 		
-		JButton btnNewButton_1 = new JButton("Change password");
-		panel_6.add(btnNewButton_1);
+		JButton change_password = new JButton("Change password");
+		change_password.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				ChangePassword frame = new ChangePassword(logged_account);
+				frame.setVisible(true);
+			}
+		});
+		panel_6.add(change_password);
 		
 		Component horizontalGlue = Box.createHorizontalGlue();
 		panel_6.add(horizontalGlue);
 		
-		JButton btnNewButton_2 = new JButton("Logout");
-		panel_6.add(btnNewButton_2);
-		JPanel panel_2 = new JPanel();
-		GridBagConstraints gbc_panel_2 = new GridBagConstraints();
-		gbc_panel_2.fill = GridBagConstraints.BOTH;
-		gbc_panel_2.gridx = 0;
-		gbc_panel_2.gridy = 1;
-		panel.add(panel_2, gbc_panel_2);
+		JButton logout = new JButton("Logout");
+		logout.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				dispose();
+			}
+		});
+		panel_6.add(logout);
+	}
+
+	private void SetSelectedButton(String sex) {
+		if (sex.equals("Male")) {
+			buttonGroup.setSelected(male.getModel(),true);
+		}
+		else {
+			buttonGroup.setSelected(female.getModel(), true);
+		}
 	}
 }
