@@ -4,23 +4,24 @@ import com.hibernate.dao.GiaovuAccountDAO;
 import com.hibernate.pojo.GiaovuAccountEntity;
 
 import javax.swing.table.AbstractTableModel;
-import java.util.ArrayList;
+
+import java.util.List;
 
 public class GiaovuAccountModel extends AbstractTableModel {
-    private ArrayList<GiaovuAccountEntity> list;
+    private List<GiaovuAccountEntity> list;
 
     public GiaovuAccountModel() {
-        list = new ArrayList<>(GiaovuAccountDAO.GetAll());
+        list = GiaovuAccountDAO.GetAll();
     }
-    public GiaovuAccountModel(ArrayList<GiaovuAccountEntity> list) {
+    public GiaovuAccountModel(List<GiaovuAccountEntity> list) {
         this.list = list;
     }
 
-    public ArrayList<GiaovuAccountEntity> getList() {
+    public List<GiaovuAccountEntity> getList() {
         return list;
     }
 
-    public void setList(ArrayList<GiaovuAccountEntity> list) {
+    public void setList(List<GiaovuAccountEntity> list) {
         this.list = list;
     }
     public void AddRow(GiaovuAccountEntity account) {

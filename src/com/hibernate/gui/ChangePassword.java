@@ -1,18 +1,26 @@
 package com.hibernate.gui;
 
-import com.hibernate.dao.GiaovuAccountDAO;
-import com.hibernate.gui.tablemodel.GiaovuAccountModel;
-import com.hibernate.pojo.GiaovuAccountEntity;
-
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
+import javax.swing.table.DefaultTableModel;
+
+import com.hibernate.dao.GiaovuAccountDAO;
+import com.hibernate.pojo.GiaovuAccountEntity;
 
 public class ChangePassword extends JFrame {
 
@@ -60,7 +68,8 @@ public class ChangePassword extends JFrame {
 		passwordField = new JPasswordField();
 		passwordField.setColumns(15);
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
-		gbc_passwordField.insets = new Insets(0, 0, 5, 0);
+		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
 		gbc_passwordField.gridx = 1;
 		gbc_passwordField.gridy = 0;
 		contentPane.add(passwordField, gbc_passwordField);
@@ -76,7 +85,8 @@ public class ChangePassword extends JFrame {
 		passwordField_1 = new JPasswordField();
 		passwordField_1.setColumns(15);
 		GridBagConstraints gbc_passwordField_1 = new GridBagConstraints();
-		gbc_passwordField_1.insets = new Insets(0, 0, 5, 0);
+		gbc_passwordField_1.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordField_1.insets = new Insets(0, 0, 5, 5);
 		gbc_passwordField_1.gridx = 1;
 		gbc_passwordField_1.gridy = 1;
 		contentPane.add(passwordField_1, gbc_passwordField_1);
@@ -92,7 +102,8 @@ public class ChangePassword extends JFrame {
 		passwordField_2 = new JPasswordField();
 		passwordField_2.setColumns(15);
 		GridBagConstraints gbc_passwordField_2 = new GridBagConstraints();
-		gbc_passwordField_2.insets = new Insets(0, 0, 5, 0);
+		gbc_passwordField_2.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordField_2.insets = new Insets(0, 0, 5, 5);
 		gbc_passwordField_2.gridx = 1;
 		gbc_passwordField_2.gridy = 2;
 		contentPane.add(passwordField_2, gbc_passwordField_2);
@@ -123,7 +134,20 @@ public class ChangePassword extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				account.setPassword(new String(passwordField_1.getPassword()));
 				GiaovuAccountDAO.Update(account);
-				giaovuTable.setModel(new GiaovuAccountModel());
+				List<GiaovuAccountEntity> list = GiaovuAccountDAO.GetAll();
+				DefaultTableModel model = new DefaultTableModel();
+				model.setColumnIdentifiers(new Object[]{
+						"id","Username","Password","Name",
+						"Faculty","Gender","Phone number", "Email"});
+				for (GiaovuAccountEntity acc : list) {
+					model.addRow(new Object[]{
+							acc.getGiaovuid(), acc.getUsername(),
+							acc.getPassword(), acc.getName(),
+							acc.getFaculty(), acc.getSex(),
+							acc.getPhonenumber(), acc.getEmail()
+					});
+				}
+				giaovuTable.setModel(model);
 				JOptionPane.showMessageDialog(null,"Your password has been updated",
 						"Successfully",JOptionPane.INFORMATION_MESSAGE);
 				dispose();

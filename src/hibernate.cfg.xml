@@ -18,8 +18,6 @@
         <property name="show_sql">true</property> <!-- Show SQL in console -->
         <property name="format_sql">true</property> <!-- Show SQL formatted -->
 
-        <mapping resource="Account.hbm.xml"/>
-        <mapping resource="ThongTinGiaoVu.hbm.xml"/>
         <mapping resource="ClassEntity.hbm.xml"/>
         <mapping resource="CourseRegisSessionEntity.hbm.xml"/>
         <mapping resource="GiaovuAccountEntity.hbm.xml"/>

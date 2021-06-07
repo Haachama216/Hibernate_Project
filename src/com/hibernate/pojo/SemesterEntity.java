@@ -24,6 +24,14 @@ public class SemesterEntity {
         this.ngayketthuc = ngayketthuc;
     }
 
+    public SemesterEntity(Object[] data) {
+        this.hk_id = (int) data[0];
+        this.tenhk = data[1].toString();
+        this.namhoc = data[2].toString();
+        this.ngaybatdau = data[3].toString();
+        this.ngayketthuc = data[4].toString();
+    }
+
     public int getHk_id() {
         return hk_id;
     }

@@ -22,7 +22,7 @@
             <column name="faculty" sql-type="varchar(50)" length="50"/>
         </property>
         <property name="sex">
-            <column name="sex" sql-type="varchar(5)" length="5"/>
+            <column name="gender" sql-type="varchar(6)" length="6"/>
         </property>
         <property name="phonenumber">
             <column name="phonenumber" sql-type="varchar(10)" length="10"/>

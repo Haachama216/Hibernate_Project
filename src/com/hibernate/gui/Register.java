@@ -1,9 +1,5 @@
 package com.hibernate.gui;
 
-import com.hibernate.dao.GiaovuAccountDAO;
-import com.hibernate.pojo.GiaovuAccountEntity;
-import com.hibernate.gui.tablemodel.GiaovuAccountModel;
-
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.Font;
@@ -20,6 +16,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+import com.hibernate.dao.GiaovuAccountDAO;
+import com.hibernate.pojo.GiaovuAccountEntity;
 
 public class Register extends JFrame {
 	private JTextField usernameField;
@@ -29,7 +29,9 @@ public class Register extends JFrame {
 	private JTextField phoneField;
 	private JTextField emailField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private GiaovuAccountModel model;
+	private DefaultTableModel model;
+	private Object[] selectedAccount;
+	private int selectedRow;
 
 	/**
 	 * Launch the application.
@@ -38,11 +40,13 @@ public class Register extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Register(GiaovuAccountModel model) {
+	public Register(DefaultTableModel model, Object[] selectedAccount,int selectedRow) {
 		this.model = model;
-
+		this.selectedRow = selectedRow;
+		this.selectedAccount = selectedAccount;
+		
 		setResizable(false);
-		setBounds(100, 100, 312, 347);
+		setBounds(100, 100, 312, 368);
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		getContentPane().setLayout(new BorderLayout(0, 0));
 		
@@ -66,9 +70,13 @@ public class Register extends JFrame {
 		
 		usernameField = new JTextField();
 		usernameField.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		if (selectedAccount != null) {
+			usernameField.setText(selectedAccount[1].toString());
+		}
 		GridBagConstraints gbc_usernameField = new GridBagConstraints();
+		gbc_usernameField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_usernameField.gridwidth = 3;
-		gbc_usernameField.insets = new Insets(5, 10, 10, 0);
+		gbc_usernameField.insets = new Insets(10, 5, 10, 5);
 		gbc_usernameField.gridx = 1;
 		gbc_usernameField.gridy = 0;
 		panel.add(usernameField, gbc_usernameField);
@@ -85,9 +93,13 @@ public class Register extends JFrame {
 		
 		passwordField = new JTextField();
 		passwordField.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		if (selectedAccount != null) {
+			passwordField.setText(selectedAccount[2].toString());
+		}
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
+		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_passwordField.gridwidth = 3;
-		gbc_passwordField.insets = new Insets(5, 10, 10, 0);
+		gbc_passwordField.insets = new Insets(5, 5, 10, 5);
 		gbc_passwordField.gridx = 1;
 		gbc_passwordField.gridy = 1;
 		panel.add(passwordField, gbc_passwordField);
@@ -104,9 +116,13 @@ public class Register extends JFrame {
 		
 		nameField = new JTextField();
 		nameField.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		if (selectedAccount != null) {
+			nameField.setText(selectedAccount[3].toString());
+		}
 		GridBagConstraints gbc_nameField = new GridBagConstraints();
+		gbc_nameField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_nameField.gridwidth = 3;
-		gbc_nameField.insets = new Insets(5, 10, 10, 0);
+		gbc_nameField.insets = new Insets(5, 5, 10, 5);
 		gbc_nameField.gridx = 1;
 		gbc_nameField.gridy = 2;
 		panel.add(nameField, gbc_nameField);
@@ -123,22 +139,26 @@ public class Register extends JFrame {
 		
 		facultyField = new JTextField();
 		facultyField.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		if (selectedAccount != null) {
+			facultyField.setText(selectedAccount[4].toString());
+		}
 		GridBagConstraints gbc_facultyField = new GridBagConstraints();
+		gbc_facultyField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_facultyField.gridwidth = 3;
-		gbc_facultyField.insets = new Insets(10, 5, 10, 0);
+		gbc_facultyField.insets = new Insets(5, 5, 10, 5);
 		gbc_facultyField.gridx = 1;
 		gbc_facultyField.gridy = 3;
 		panel.add(facultyField, gbc_facultyField);
 		facultyField.setColumns(15);
 		
-		JLabel sex = new JLabel("Gi\u1EDBi t\u00EDnh");
-		sex.setFont(new Font("Times New Roman", Font.BOLD, 12));
-		GridBagConstraints gbc_sex = new GridBagConstraints();
-		gbc_sex.anchor = GridBagConstraints.WEST;
-		gbc_sex.insets = new Insets(0, 0, 5, 5);
-		gbc_sex.gridx = 0;
-		gbc_sex.gridy = 4;
-		panel.add(sex, gbc_sex);
+		JLabel gender = new JLabel("Gi\u1EDBi t\u00EDnh");
+		gender.setFont(new Font("Times New Roman", Font.BOLD, 12));
+		GridBagConstraints gbc_gender = new GridBagConstraints();
+		gbc_gender.anchor = GridBagConstraints.WEST;
+		gbc_gender.insets = new Insets(0, 0, 5, 5);
+		gbc_gender.gridx = 0;
+		gbc_gender.gridy = 4;
+		panel.add(gender, gbc_gender);
 		
 		JRadioButton male = new JRadioButton("Male");
 		male.setFont(new Font("Times New Roman", Font.BOLD, 12));
@@ -159,6 +179,16 @@ public class Register extends JFrame {
 		gbc_female.gridx = 2;
 		gbc_female.gridy = 4;
 		panel.add(female, gbc_female);
+		if (selectedAccount != null) {
+			buttonGroup.setSelected(
+					switch(selectedAccount[5].toString()) {
+						case "Male" -> male.getModel();
+						case "Female" -> female.getModel();
+						default -> null;
+					},
+					true
+			);
+		}
 		
 		JLabel phonenumber = new JLabel("S\u1ED1 \u0111i\u1EC7n tho\u1EA1i");
 		phonenumber.setFont(new Font("Times New Roman", Font.BOLD, 12));
@@ -171,9 +201,13 @@ public class Register extends JFrame {
 		
 		phoneField = new JTextField();
 		phoneField.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		if (selectedAccount != null) {
+			phoneField.setText(selectedAccount[6].toString());
+		}
 		GridBagConstraints gbc_phoneField = new GridBagConstraints();
+		gbc_phoneField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_phoneField.gridwidth = 3;
-		gbc_phoneField.insets = new Insets(10, 5, 10, 0);
+		gbc_phoneField.insets = new Insets(5, 5, 10, 5);
 		gbc_phoneField.gridx = 1;
 		gbc_phoneField.gridy = 5;
 		panel.add(phoneField, gbc_phoneField);
@@ -190,9 +224,13 @@ public class Register extends JFrame {
 		
 		emailField = new JTextField();
 		emailField.setFont(new Font("Times New Roman", Font.PLAIN, 12));
+		if (selectedAccount != null) {
+			emailField.setText(selectedAccount[7].toString());
+		}
 		GridBagConstraints gbc_emailField = new GridBagConstraints();
+		gbc_emailField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_emailField.gridwidth = 3;
-		gbc_emailField.insets = new Insets(10, 5, 10, 0);
+		gbc_emailField.insets = new Insets(5, 5, 10, 5);
 		gbc_emailField.gridx = 1;
 		gbc_emailField.gridy = 6;
 		panel.add(emailField, gbc_emailField);
@@ -203,21 +241,40 @@ public class Register extends JFrame {
 		flowLayout_1.setHgap(10);
 		getContentPane().add(panel_1, BorderLayout.SOUTH);
 		
-		JButton register = new JButton("Register");
+		JButton register = new JButton("Add/Update");
 		register.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				GiaovuAccountEntity account = new GiaovuAccountEntity();
-				account.setUsername(usernameField.getText());
-				account.setPassword(passwordField.getText());
-				account.setName(nameField.getText());
-				account.setFaculty(facultyField.getText());
-				account.setPhonenumber(phoneField.getText());
-				account.setEmail(emailField.getText());
-				account.setSex(buttonGroup.getSelection().getActionCommand());
-				GiaovuAccountDAO.Save(account);
-				if (model != null)
-					model.AddRow(account);
+				if (selectedAccount == null) {
+					GiaovuAccountEntity account = new GiaovuAccountEntity();
+					account.setUsername(usernameField.getText());
+					account.setPassword(passwordField.getText());
+					account.setName(nameField.getText());
+					account.setFaculty(facultyField.getText());
+					account.setPhonenumber(phoneField.getText());
+					account.setEmail(emailField.getText());
+					account.setSex(buttonGroup.getSelection().getActionCommand());
+					GiaovuAccountDAO.Save(account);
+					if (model != null)
+						model.addRow(new Object[]{
+								account.getGiaovuid(), account.getUsername(),
+								account.getPassword(), account.getName(),
+								account.getFaculty(), account.getSex(),
+								account.getPhonenumber(), account.getEmail()
+						});
+				}
+				else {
+					selectedAccount[1] = usernameField.getText();
+					selectedAccount[2] = passwordField.getText();
+					selectedAccount[3] = nameField.getText();
+					selectedAccount[4] = facultyField.getText();
+					selectedAccount[5] = buttonGroup.getSelection().getActionCommand();
+					selectedAccount[6] = phoneField.getText();
+					selectedAccount[7] = emailField.getText();
+					for (int i = 1; i < 8; ++i) {
+						model.setValueAt(selectedAccount[i],selectedRow,i);
+					}
+				}
 				dispose();
 			}
 		});

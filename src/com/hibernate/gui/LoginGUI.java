@@ -75,7 +75,7 @@ public class LoginGUI extends JFrame {
 		register.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Register frame = new Register(null);
+				Register frame = new Register(null,null,-1);
 				frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 				frame.setVisible(true);
 			}

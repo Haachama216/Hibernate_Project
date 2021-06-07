@@ -26,6 +26,16 @@ public class GiaovuAccountEntity {
         this.email = email;
     }
 
+    public GiaovuAccountEntity(Object[] data) {
+        this.giaovuid = (int) data[0];
+        this.username = data[1].toString();
+        this.password = data[2].toString();
+        this.name = data[3].toString();
+        this.faculty = data[4].toString();
+        this.sex = data[5].toString();
+        this.phonenumber = data[6].toString();
+        this.email = data[7].toString();
+    }
     public int getGiaovuid() {
         return giaovuid;
     }

@@ -1,6 +1,5 @@
 package com.hibernate;
 
-import com.hibernate.dao.AccountDAO;
 import com.hibernate.gui.LoginGUI;
 import com.hibernate.gui.TableTest;
 import com.hibernate.pojo.Account;
@@ -49,6 +48,16 @@ public class Main {
 //        session.save(semester);
 //        session.getTransaction().commit();
 
+        try {
+    		for (UIManager.LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    UIManager.setLookAndFeel(info.getClassName());
+                }
+            }
+    	}
+    	catch (Exception e) {
+            e.printStackTrace();
+        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
