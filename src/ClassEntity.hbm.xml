@@ -18,7 +18,7 @@
         <property name="tongsinhvienNu">
             <column name="tongsinhvien_nu" sql-type="integer"/>
         </property>
-        <set name="studentList" table="student" lazy="true" inverse="true" cascade="all">
+        <set name="studentList" table="student" lazy="false" inverse="true" cascade="all">
             <key>
                 <column name="classid" not-null="true"/>
             </key>

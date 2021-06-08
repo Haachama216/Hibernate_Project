@@ -1,6 +1,6 @@
 package com.hibernate.pojo;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -11,10 +11,10 @@ public class SemesterEntity {
     private String namhoc;
     private String ngaybatdau;
     private String ngayketthuc;
-    private Set<SubjectEntity> subjectSet;
+    private Set<SubjectEntity> subjects;
     private CourseRegisSessionEntity courseRegisSessionEntity;
     public SemesterEntity() {
-        subjectSet = new HashSet<SubjectEntity>();
+        subjects = new LinkedHashSet<SubjectEntity>();
     }
 
     public SemesterEntity(String tenhk, String namhoc, String ngaybatdau, String ngayketthuc) {
@@ -22,6 +22,7 @@ public class SemesterEntity {
         this.namhoc = namhoc;
         this.ngaybatdau = ngaybatdau;
         this.ngayketthuc = ngayketthuc;
+        subjects = new LinkedHashSet<SubjectEntity>();
     }
 
     public SemesterEntity(Object[] data) {
@@ -30,6 +31,7 @@ public class SemesterEntity {
         this.namhoc = data[2].toString();
         this.ngaybatdau = data[3].toString();
         this.ngayketthuc = data[4].toString();
+        subjects = new LinkedHashSet<SubjectEntity>();
     }
 
     public int getHk_id() {
@@ -71,12 +73,12 @@ public class SemesterEntity {
         this.ngayketthuc = ngayketthuc;
     }
 
-    public Set<SubjectEntity> getSubjectSet() {
-        return subjectSet;
+    public Set<SubjectEntity> getSubjects() {
+        return subjects;
     }
 
-    public void setSubjectSet(Set<SubjectEntity> subjectSet) {
-        this.subjectSet = subjectSet;
+    public void setSubjects(Set<SubjectEntity> subjectSet) {
+        this.subjects = subjectSet;
     }
 
     public CourseRegisSessionEntity getCourseRegisSessionEntity() {

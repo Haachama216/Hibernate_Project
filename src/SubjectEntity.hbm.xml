@@ -9,7 +9,7 @@
             <column name="subjectid" sql-type="integer"/>
             <generator class="identity"></generator>
         </id>
-        <many-to-one name="semester" class="com.hibernate.pojo.SemesterEntity">
+        <many-to-one name="semester" class="com.hibernate.pojo.SemesterEntity" cascade="none">
             <column name="hk_id" not-null="true"/>
         </many-to-one>
         <property name="mamh">

@@ -1,8 +1,5 @@
 package com.hibernate.gui;
 
-import com.hibernate.dao.SemesterDAO;
-import com.hibernate.pojo.SemesterEntity;
-
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,6 +17,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import com.hibernate.dao.SemesterDAO;
+import com.hibernate.pojo.SemesterEntity;
 
 public class AddSemester extends JFrame {
 
@@ -45,7 +45,7 @@ public class AddSemester extends JFrame {
 	public AddSemester(DefaultTableModel model) {
 		this.model = model;
 		
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 256, 236);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

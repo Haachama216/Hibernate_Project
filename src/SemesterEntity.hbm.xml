@@ -21,7 +21,7 @@
         <property name="ngayketthuc">
             <column name="ngayketthuc" sql-type="varchar(5)" length="5"/>
         </property>
-        <set name="subjectSet" cascade="all" inverse="true" lazy="true">
+        <set name="subjects" cascade="all" inverse="true" lazy="false">
             <key>
                 <column name="hk_id" not-null="true"/>
             </key>

@@ -9,6 +9,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -28,8 +29,10 @@ import javax.swing.table.DefaultTableModel;
 
 import com.hibernate.dao.GiaovuAccountDAO;
 import com.hibernate.dao.SemesterDAO;
+import com.hibernate.dao.SubjectDAO;
 import com.hibernate.pojo.GiaovuAccountEntity;
 import com.hibernate.pojo.SemesterEntity;
+import com.hibernate.pojo.SubjectEntity;
 
 public class MainFrame extends JFrame {
 	private GiaovuAccountEntity logged_account = null;
@@ -45,8 +48,8 @@ public class MainFrame extends JFrame {
 	private JTextField textField;
 	private JTable semesterTable;
 	private JTextField semesterSearchField;
-	private JTable table_1;
-	private JTextField textField_1;
+	private JTable subjectTable;
+	private JTextField subjectSearchField;
 	/**
 	 * Launch the application.
 	 */
@@ -144,10 +147,8 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = giaovuAccountTable.getSelectedRow();
 				DefaultTableModel model = (DefaultTableModel) giaovuAccountTable.getModel();
-				Object[] selectedAccount = new Object[8];
-				for (int i = 0; i < 8; ++i) {
-					selectedAccount[i] = model.getValueAt(selectedRow,i);
-				}
+				GiaovuAccountEntity selectedAccount = GiaovuAccountDAO.Get((String) model.getValueAt(selectedRow,1)
+				, (String) model.getValueAt(selectedRow,2));
 				Register frame = new Register(model,selectedAccount,selectedRow);
 				frame.setVisible(true);
 			}
@@ -165,11 +166,8 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int row = giaovuAccountTable.getSelectedRow();
 				DefaultTableModel model = (DefaultTableModel) giaovuAccountTable.getModel();
-				Object[] rowData = new Object[8];
-				for (int i = 0; i < 8; ++i) {
-					rowData[i] = model.getValueAt(row,i);
-				}
-				GiaovuAccountEntity account = new GiaovuAccountEntity(rowData);
+				GiaovuAccountEntity account = GiaovuAccountDAO.Get((String) model.getValueAt(row,1),
+						(String) model.getValueAt(row,2));
 				GiaovuAccountDAO.Delete(account);
 				model.removeRow(row);
 			}
@@ -267,14 +265,11 @@ public class MainFrame extends JFrame {
 				}
 				else {
 					DefaultTableModel model = (DefaultTableModel) semesterTable.getModel();
-					Object[] rowData = new Object[5];
-					for (int i = 0; i < 5; ++i) {
-						rowData[i] = model.getValueAt(selectedRow, i);
-					}
-					setSemester = new SemesterEntity(rowData);
+					setSemester = SemesterDAO.Get((int) model.getValueAt(selectedRow,0));
 					JOptionPane.showMessageDialog(null, "Set semester successfully",
 							null, JOptionPane.INFORMATION_MESSAGE);
 				}
+				LoadDataIntoTable(new SubjectEntity(), subjectTable);
 			}
 		});
 
@@ -291,10 +286,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				int selectedRow = semesterTable.getSelectedRow();
 				DefaultTableModel model = (DefaultTableModel) semesterTable.getModel();
-				Object[] rowData = new Object[5];
-				for (int i = 0; i < 5; ++i)
-					rowData[i] = model.getValueAt(selectedRow,i);
-				SemesterEntity semester = new SemesterEntity(rowData);
+				SemesterEntity semester = SemesterDAO.Get((int) model.getValueAt(selectedRow,0));
 				SemesterDAO.Delete(semester);
 				model.removeRow(selectedRow);
 			}
@@ -329,81 +321,110 @@ public class MainFrame extends JFrame {
 		tabbedPane.addTab("M\u00F4n h\u1ECDc", null, subject, null);
 		subject.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
-		subject.add(panel, BorderLayout.CENTER);
-		GridBagLayout gbl_panel = new GridBagLayout();
-		gbl_panel.columnWidths = new int[]{0, 0};
-		gbl_panel.rowHeights = new int[]{0, 0, 0};
-		gbl_panel.columnWeights = new double[]{1.0, Double.MIN_VALUE};
-		gbl_panel.rowWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
-		panel.setLayout(gbl_panel);
+		JPanel subject_CenterPane = new JPanel();
+		subject.add(subject_CenterPane, BorderLayout.CENTER);
+		GridBagLayout gbl_subject_CenterPane = new GridBagLayout();
+		gbl_subject_CenterPane.columnWidths = new int[]{0, 0};
+		gbl_subject_CenterPane.rowHeights = new int[]{0, 0, 0};
+		gbl_subject_CenterPane.columnWeights = new double[]{1.0, Double.MIN_VALUE};
+		gbl_subject_CenterPane.rowWeights = new double[]{1.0, 1.0, Double.MIN_VALUE};
+		subject_CenterPane.setLayout(gbl_subject_CenterPane);
 		
-		JPanel panel_1 = new JPanel();
-		GridBagConstraints gbc_panel_1 = new GridBagConstraints();
-		gbc_panel_1.insets = new Insets(0, 0, 5, 0);
-		gbc_panel_1.fill = GridBagConstraints.BOTH;
-		gbc_panel_1.gridx = 0;
-		gbc_panel_1.gridy = 0;
-		panel.add(panel_1, gbc_panel_1);
-		panel_1.setLayout(new BorderLayout(0, 0));
+		JPanel subject_TopPane = new JPanel();
+		GridBagConstraints gbc_subject_TopPane = new GridBagConstraints();
+		gbc_subject_TopPane.insets = new Insets(0, 0, 5, 0);
+		gbc_subject_TopPane.fill = GridBagConstraints.BOTH;
+		gbc_subject_TopPane.gridx = 0;
+		gbc_subject_TopPane.gridy = 0;
+		subject_CenterPane.add(subject_TopPane, gbc_subject_TopPane);
+		subject_TopPane.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_2 = new JPanel();
-		panel_1.add(panel_2, BorderLayout.SOUTH);
-		GridBagLayout gbl_panel_2 = new GridBagLayout();
-		gbl_panel_2.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
-		gbl_panel_2.rowHeights = new int[]{0, 0};
-		gbl_panel_2.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_panel_2.rowWeights = new double[]{0.0, Double.MIN_VALUE};
-		panel_2.setLayout(gbl_panel_2);
+		JPanel subjectFunctions = new JPanel();
+		subject_TopPane.add(subjectFunctions, BorderLayout.SOUTH);
+		GridBagLayout gbl_subjectFunctions = new GridBagLayout();
+		gbl_subjectFunctions.columnWidths = new int[]{0, 0, 0, 0, 0, 0};
+		gbl_subjectFunctions.rowHeights = new int[]{0, 0};
+		gbl_subjectFunctions.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_subjectFunctions.rowWeights = new double[]{0.0, Double.MIN_VALUE};
+		subjectFunctions.setLayout(gbl_subjectFunctions);
 		
-		JLabel lblNewLabel = new JLabel("Search");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(0, 0, 0, 5);
-		gbc_lblNewLabel.anchor = GridBagConstraints.EAST;
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 0;
-		panel_2.add(lblNewLabel, gbc_lblNewLabel);
+		JLabel subjectSearch = new JLabel("Search");
+		subjectSearch.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		GridBagConstraints gbc_subjectSearch = new GridBagConstraints();
+		gbc_subjectSearch.insets = new Insets(0, 0, 0, 5);
+		gbc_subjectSearch.anchor = GridBagConstraints.EAST;
+		gbc_subjectSearch.gridx = 0;
+		gbc_subjectSearch.gridy = 0;
+		subjectFunctions.add(subjectSearch, gbc_subjectSearch);
 		
-		textField_1 = new JTextField();
-		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.insets = new Insets(0, 0, 0, 5);
-		gbc_textField_1.gridx = 1;
-		gbc_textField_1.gridy = 0;
-		panel_2.add(textField_1, gbc_textField_1);
-		textField_1.setColumns(20);
+		subjectSearchField = new JTextField();
+		subjectSearchField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		GridBagConstraints gbc_subjectSearchField = new GridBagConstraints();
+		gbc_subjectSearchField.insets = new Insets(0, 0, 0, 5);
+		gbc_subjectSearchField.gridx = 1;
+		gbc_subjectSearchField.gridy = 0;
+		subjectFunctions.add(subjectSearchField, gbc_subjectSearchField);
+		subjectSearchField.setColumns(20);
 		
-		JButton btnNewButton = new JButton("Add");
-		GridBagConstraints gbc_btnNewButton = new GridBagConstraints();
-		gbc_btnNewButton.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton.gridx = 2;
-		gbc_btnNewButton.gridy = 0;
-		panel_2.add(btnNewButton, gbc_btnNewButton);
+		JButton subjectAddButton = new JButton("Add");
+		subjectAddButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DefaultTableModel model = (DefaultTableModel) subjectTable.getModel();
+				AddUpdateSubject frame = new AddUpdateSubject(setSemester,model);
+				frame.setVisible(true);
+			}
+		});
+		subjectAddButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		GridBagConstraints gbc_subjectAddButton = new GridBagConstraints();
+		gbc_subjectAddButton.insets = new Insets(0, 0, 0, 5);
+		gbc_subjectAddButton.gridx = 2;
+		gbc_subjectAddButton.gridy = 0;
+		subjectFunctions.add(subjectAddButton, gbc_subjectAddButton);
 		
-		JButton btnNewButton_1 = new JButton("Update");
-		GridBagConstraints gbc_btnNewButton_1 = new GridBagConstraints();
-		gbc_btnNewButton_1.insets = new Insets(0, 0, 0, 5);
-		gbc_btnNewButton_1.gridx = 3;
-		gbc_btnNewButton_1.gridy = 0;
-		panel_2.add(btnNewButton_1, gbc_btnNewButton_1);
+		JButton subjectUpdateButton = new JButton("Update");
+		subjectUpdateButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		GridBagConstraints gbc_subjectUpdateButton = new GridBagConstraints();
+		gbc_subjectUpdateButton.insets = new Insets(0, 0, 0, 5);
+		gbc_subjectUpdateButton.gridx = 3;
+		gbc_subjectUpdateButton.gridy = 0;
+		subjectFunctions.add(subjectUpdateButton, gbc_subjectUpdateButton);
 		
-		JButton btnNewButton_2 = new JButton("Delete");
-		GridBagConstraints gbc_btnNewButton_2 = new GridBagConstraints();
-		gbc_btnNewButton_2.gridx = 4;
-		gbc_btnNewButton_2.gridy = 0;
-		panel_2.add(btnNewButton_2, gbc_btnNewButton_2);
+		JButton subjectDeleteButton = new JButton("Delete");
+		subjectDeleteButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = subjectTable.getSelectedRow();
+				DefaultTableModel model = (DefaultTableModel) subjectTable.getModel();
+				SubjectEntity selectedSubject = SubjectDAO.Get((int) model.getValueAt(selectedRow,0));
+				SubjectDAO.Delete(selectedSubject);
+				model.removeRow(selectedRow);
+			}
+		});
+		subjectDeleteButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		GridBagConstraints gbc_subjectDeleteButton = new GridBagConstraints();
+		gbc_subjectDeleteButton.gridx = 4;
+		gbc_subjectDeleteButton.gridy = 0;
+		subjectFunctions.add(subjectDeleteButton, gbc_subjectDeleteButton);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
-		GridBagConstraints gbc_scrollPane_1 = new GridBagConstraints();
-		gbc_scrollPane_1.fill = GridBagConstraints.BOTH;
-		gbc_scrollPane_1.gridx = 0;
-		gbc_scrollPane_1.gridy = 1;
-		panel.add(scrollPane_1, gbc_scrollPane_1);
+		JScrollPane subjectScrollPane = new JScrollPane();
+		GridBagConstraints gbc_subjectScrollPane = new GridBagConstraints();
+		gbc_subjectScrollPane.fill = GridBagConstraints.BOTH;
+		gbc_subjectScrollPane.gridx = 0;
+		gbc_subjectScrollPane.gridy = 1;
+		subject_CenterPane.add(subjectScrollPane, gbc_subjectScrollPane);
 		
 		
 		
 		//subject table data
-		table_1 = new JTable();
-		scrollPane_1.setViewportView(table_1);
+		subjectTable = new JTable(new DefaultTableModel(
+				new Object[][]{},
+				new Object[]{"id", "Subject code", "Subject name", "Credits"}
+		));
+		subjectTable.setShowVerticalLines(true);
+		subjectTable.setShowHorizontalLines(true);
+
+		subjectScrollPane.setViewportView(subjectTable);
 		
 		
 		
@@ -608,6 +629,18 @@ public class MainFrame extends JFrame {
 						semester.getHk_id(), semester.getTenhk(),
 						semester.getNamhoc(), semester.getNgaybatdau(),
 						semester.getNgayketthuc()
+				});
+			}
+		}
+		else if (obj instanceof SubjectEntity) {
+			Set<SubjectEntity> list = setSemester.getSubjects();
+			model.setColumnIdentifiers(new Object[]{
+					"id", "Subject code", "Subject name", "Credits"
+			});
+			for (SubjectEntity subject : list) {
+				model.addRow(new Object[] {
+						subject.getSubjectid(), subject.getMamh(),
+						subject.getTenmh(), subject.getSotinchi()
 				});
 			}
 		}
