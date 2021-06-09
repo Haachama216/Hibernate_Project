@@ -33,6 +33,11 @@ public class ClassEntity {
     }
 
     public int getTongsinhvienNam() {
+        tongsinhvienNam = 0;
+        for (StudentEntity student : studentList) {
+            if (student.getGioitinh().equals("Male"))
+                ++tongsinhvienNam;
+        }
         return tongsinhvienNam;
     }
 
@@ -41,6 +46,11 @@ public class ClassEntity {
     }
 
     public int getTongsinhvienNu() {
+        tongsinhvienNu = 0;
+        for (StudentEntity student : studentList) {
+            if (student.getGioitinh().equals("Female"))
+                ++tongsinhvienNu;
+        }
         return tongsinhvienNu;
     }
 

@@ -24,5 +24,13 @@
         <property name="gioitinh">
             <column name="gioitinh" sql-type="varchar(5)" length="5"/>
         </property>
+        <set name="courseList" table="course_student" inverse="true" lazy="true">
+            <key>
+                <column name="studentid" not-null="true"/>
+            </key>
+            <many-to-many entity-name="com.hibernate.pojo.CourseEntity">
+                <column name="courseid" not-null="true"/>
+            </many-to-many>
+        </set>
     </class>
 </hibernate-mapping>

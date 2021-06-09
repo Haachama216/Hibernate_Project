@@ -24,6 +24,6 @@
         <mapping resource="SemesterEntity.hbm.xml"/>
         <mapping resource="StudentEntity.hbm.xml"/>
         <mapping resource="SubjectEntity.hbm.xml"/>
-
+        <mapping resource="CourseEntity.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

@@ -1,6 +1,7 @@
 package com.hibernate;
 
 import com.hibernate.dao.SubjectDAO;
+import com.hibernate.gui.AddNewCourse;
 import com.hibernate.gui.LoginGUI;
 import com.hibernate.gui.TableTest;
 import com.hibernate.pojo.Account;
@@ -34,6 +35,8 @@ public class Main {
                 HibernateUtil.BuildSessionFactory();
                 LoginGUI frame = new LoginGUI();
                 frame.setVisible(true);
+//                AddNewCourse frame = new AddNewCourse();
+//                frame.setVisible(true);
             }
         });
     }

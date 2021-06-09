@@ -34,6 +34,8 @@ public class AddUpdateSubject extends JFrame {
 	private JButton cancel;
 	private JComboBox comboBox;
 	private SemesterEntity setSemester;
+	private int selectedRow;
+	private SubjectEntity selectedSubject;
 	private DefaultTableModel model = null;
 	/**
 	 * Launch the application.
@@ -42,9 +44,12 @@ public class AddUpdateSubject extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AddUpdateSubject(SemesterEntity setSemester, DefaultTableModel model) {
+	public AddUpdateSubject(SemesterEntity setSemester, DefaultTableModel model, int selectedRow, SubjectEntity selectedSubject) {
 		this.setSemester = setSemester;
 		this.model = model;
+		this.selectedRow = selectedRow;
+		this.selectedSubject = selectedSubject;
+
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 285, 252);
 		contentPane = new JPanel();
@@ -67,6 +72,9 @@ public class AddUpdateSubject extends JFrame {
 		contentPane.add(subjectCode, gbc_subjectCode);
 		
 		codeField = new JTextField();
+		if (selectedSubject != null) {
+			codeField.setText(selectedSubject.getMamh());
+		}
 		GridBagConstraints gbc_codeField = new GridBagConstraints();
 		gbc_codeField.anchor = GridBagConstraints.WEST;
 		gbc_codeField.insets = new Insets(5, 10, 5, 0);
@@ -85,6 +93,9 @@ public class AddUpdateSubject extends JFrame {
 		contentPane.add(subjectName, gbc_subjectName);
 		
 		nameField = new JTextField();
+		if (selectedSubject != null) {
+			nameField.setText(selectedSubject.getTenmh());
+		}
 		GridBagConstraints gbc_nameField = new GridBagConstraints();
 		gbc_nameField.anchor = GridBagConstraints.WEST;
 		gbc_nameField.insets = new Insets(5, 10, 5, 0);
@@ -104,6 +115,9 @@ public class AddUpdateSubject extends JFrame {
 		
 		comboBox = new JComboBox();
 		comboBox.setModel(new DefaultComboBoxModel(new Integer[] {1,2,3,4}));
+		if (selectedSubject != null) {
+			comboBox.setSelectedItem(selectedSubject.getSotinchi());
+		}
 		GridBagConstraints gbc_comboBox = new GridBagConstraints();
 		gbc_comboBox.anchor = GridBagConstraints.WEST;
 		gbc_comboBox.insets = new Insets(5, 10, 5, 5);
@@ -126,16 +140,27 @@ public class AddUpdateSubject extends JFrame {
 		apply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				SubjectEntity newSubject = new SubjectEntity();
-				newSubject.setMamh(codeField.getText());
-				newSubject.setTenmh(nameField.getText());
-				newSubject.setSotinchi((int) comboBox.getSelectedItem());
-				newSubject.setSemester(setSemester);
-				SubjectDAO.Save(newSubject);
-				model.addRow(new Object[] {
-						newSubject.getSubjectid(), newSubject.getMamh(),
-						newSubject.getTenmh(), newSubject.getSotinchi()
-				});
+				if (selectedRow == -1 && selectedSubject == null) {
+					SubjectEntity newSubject = new SubjectEntity();
+					newSubject.setMamh(codeField.getText());
+					newSubject.setTenmh(nameField.getText());
+					newSubject.setSotinchi((int) comboBox.getSelectedItem());
+					newSubject.setSemester(setSemester);
+					SubjectDAO.Save(newSubject);
+					model.addRow(new Object[]{
+							newSubject.getSubjectid(), newSubject.getMamh(),
+							newSubject.getTenmh(), newSubject.getSotinchi()
+					});
+				}
+				else if (selectedRow != -1 && selectedSubject != null) {
+					selectedSubject.setMamh(codeField.getText());
+					selectedSubject.setTenmh(nameField.getText());
+					selectedSubject.setSotinchi((int) comboBox.getSelectedItem());
+					SubjectDAO.Update(selectedSubject);
+					model.setValueAt(selectedSubject.getMamh(),selectedRow,1);
+					model.setValueAt(selectedSubject.getTenmh(),selectedRow,2);
+					model.setValueAt(selectedSubject.getSotinchi(),selectedRow,3);
+				}
 				dispose();
 			}
 		});

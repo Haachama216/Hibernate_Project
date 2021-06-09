@@ -1,6 +1,8 @@
 package com.hibernate.pojo;
 
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class StudentEntity {
     private int studentid;
@@ -9,8 +11,11 @@ public class StudentEntity {
     private String tenhs;
     private String gioitinh;
     private ClassEntity classEntity;
+    private Set<CourseEntity> courseList;
 
-    public StudentEntity() {}
+    public StudentEntity() {
+        courseList = new LinkedHashSet<>();
+    }
 
     public StudentEntity(String username, String password, String tenhs, String gioitinh, ClassEntity classEntity) {
         this.username = username;
@@ -66,6 +71,14 @@ public class StudentEntity {
 
     public void setClassEntity(ClassEntity classEntity) {
         this.classEntity = classEntity;
+    }
+
+    public Set<CourseEntity> getCourseList() {
+        return courseList;
+    }
+
+    public void setCourseList(Set<CourseEntity> courseList) {
+        this.courseList = courseList;
     }
 
     @Override

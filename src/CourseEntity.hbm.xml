@@ -1,0 +1,42 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+    <class name="com.hibernate.pojo.CourseEntity" table="course" schema="public" catalog="My_Database">
+        <id name="courseid">
+            <column name="courseid" unique="true" not-null="true"/>
+            <generator class="identity"></generator>
+        </id>
+        <many-to-one name="subject" class="com.hibernate.pojo.SubjectEntity" cascade="none" lazy="false">
+            <column name="subjectid" not-null="true"/>
+        </many-to-one>
+        <property name="teacher">
+            <column name="teacher" sql-type="varchar(20)" length="20"/>
+        </property>
+        <property name="room">
+            <column name="room" sql-type="varchar(10)" length="10"/>
+        </property>
+        <property name="day">
+            <column name="day" sql-type="varchar(10)" length="10"/>
+        </property>
+        <property name="time">
+            <column name="time" sql-type="varchar(10)" length="10"/>
+        </property>
+        <property name="maxSlot">
+            <column name="maxslot" sql-type="integer"/>
+        </property>
+        <many-to-one name="courseRegis" class="com.hibernate.pojo.CourseRegisSessionEntity" cascade="none" lazy="false">
+            <column name="course_regis_id" not-null="true"/>
+        </many-to-one>
+        <set name="studentList" table="course_student" inverse="false" lazy="true" cascade="all">
+            <key>
+                <column name="courseid" not-null="true"/>
+            </key>
+            <many-to-many entity-name="com.hibernate.pojo.StudentEntity">
+                <column name="studentid" not-null="true"/>
+            </many-to-many>
+        </set>
+    </class>
+</hibernate-mapping>

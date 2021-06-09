@@ -19,5 +19,11 @@
         <property name="ngaykethuc">
             <column name="ngaykethuc" sql-type="varchar(5)" length="5"/>
         </property>
+        <set name="courseList" cascade="all" inverse="true" lazy="true">
+            <key>
+                <column name="course_regis_id" not-null="true"/>
+            </key>
+            <one-to-many class="com.hibernate.pojo.CourseEntity"/>
+        </set>
     </class>
 </hibernate-mapping>

@@ -1,12 +1,28 @@
 package com.hibernate.pojo;
 
+import java.util.LinkedHashSet;
 import java.util.Objects;
+import java.util.Set;
 
 public class CourseRegisSessionEntity {
     private int courseRegisId;
     private String ngaybatdau;
     private String ngaykethuc;
     private SemesterEntity semester;
+    private Set<CourseEntity> courseList;
+
+    public CourseRegisSessionEntity() {
+        courseList = new LinkedHashSet<>();
+    }
+
+    public CourseRegisSessionEntity(String ngaybatdau, String ngaykethuc,
+                                    SemesterEntity semester, Set<CourseEntity> courseList) {
+        this.ngaybatdau = ngaybatdau;
+        this.ngaykethuc = ngaykethuc;
+        this.semester = semester;
+        this.courseList = courseList;
+    }
+
     public int getCourseRegisId() {
         return courseRegisId;
     }
@@ -37,6 +53,14 @@ public class CourseRegisSessionEntity {
 
     public void setSemester(SemesterEntity semester) {
         this.semester = semester;
+    }
+
+    public Set<CourseEntity> getCourseList() {
+        return courseList;
+    }
+
+    public void setCourseList(Set<CourseEntity> courseList) {
+        this.courseList = courseList;
     }
 
     @Override
