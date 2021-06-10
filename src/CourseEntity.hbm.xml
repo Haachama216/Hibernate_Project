@@ -22,7 +22,7 @@
             <column name="day" sql-type="varchar(10)" length="10"/>
         </property>
         <property name="time">
-            <column name="time" sql-type="varchar(10)" length="10"/>
+            <column name="time" sql-type="varchar(20)" length="20"/>
         </property>
         <property name="maxSlot">
             <column name="maxslot" sql-type="integer"/>

@@ -8,6 +8,7 @@ public class StudentEntity {
     private int studentid;
     private String username;
     private String password;
+    private String mssv;
     private String tenhs;
     private String gioitinh;
     private ClassEntity classEntity;
@@ -47,6 +48,14 @@ public class StudentEntity {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getMssv() {
+        return mssv;
+    }
+
+    public void setMssv(String mssv) {
+        this.mssv = mssv;
     }
 
     public String getTenhs() {

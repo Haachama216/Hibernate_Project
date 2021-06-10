@@ -1,20 +1,21 @@
 package com.hibernate.pojo;
 
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Objects;
 import java.util.Set;
 
 public class ClassEntity {
     private int classid;
+    private String classname;
     private int tongsinhvien;
     private int tongsinhvienNam;
     private int tongsinhvienNu;
     private Set<StudentEntity> studentList;
 
     public ClassEntity() {
-        studentList = new HashSet<StudentEntity>();
+        studentList = new LinkedHashSet<StudentEntity>();
     }
-
 
     public int getClassid() {
         return classid;
@@ -24,7 +25,16 @@ public class ClassEntity {
         this.classid = classid;
     }
 
+    public String getClassname() {
+        return classname;
+    }
+
+    public void setClassname(String classname) {
+        this.classname = classname;
+    }
+
     public int getTongsinhvien() {
+        tongsinhvien = studentList.size();
         return tongsinhvien;
     }
 

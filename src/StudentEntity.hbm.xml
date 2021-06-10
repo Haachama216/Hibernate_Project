@@ -9,7 +9,7 @@
             <column name="studentid" sql-type="integer"/>
             <generator class="identity"></generator>
         </id>
-        <many-to-one name="classEntity" class="com.hibernate.pojo.ClassEntity">
+        <many-to-one name="classEntity" class="com.hibernate.pojo.ClassEntity" lazy="false">
             <column name="classid" not-null="true"/>
         </many-to-one>
         <property name="username">
@@ -18,11 +18,14 @@
         <property name="password">
             <column name="password" sql-type="varchar(20)" length="20"/>
         </property>
+        <property name="mssv">
+            <column name="mssv" sql-type="varchar(10)" length="10"/>
+        </property>
         <property name="tenhs">
             <column name="tenhs" sql-type="varchar(30)" length="30"/>
         </property>
         <property name="gioitinh">
-            <column name="gioitinh" sql-type="varchar(5)" length="5"/>
+            <column name="gioitinh" sql-type="varchar(6)" length="6"/>
         </property>
         <set name="courseList" table="course_student" inverse="true" lazy="true">
             <key>

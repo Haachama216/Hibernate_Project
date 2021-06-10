@@ -1,12 +1,14 @@
 package com.hibernate.dao;
 
 import com.hibernate.HibernateUtil;
+import com.hibernate.pojo.CourseEntity;
 import com.hibernate.pojo.StudentEntity;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
 import java.util.List;
+import java.util.Set;
 
 public class StudentDAO {
     public static StudentEntity Get(int studentid) {
@@ -22,6 +24,22 @@ public class StudentDAO {
         return student;
     }
 
+    public static Set<CourseEntity> GetCourseList(int studentid) {
+        Set<CourseEntity> list = null;
+        Session session = null;
+        try {
+            session = HibernateUtil.GetSession();
+            StudentEntity student = session.get(StudentEntity.class, studentid);
+            list = student.getCourseList();
+            //unproxy this project
+            list.size();
+        }
+        finally {
+            assert session != null;
+            session.close();
+        }
+        return list;
+    }
     public static List<StudentEntity> GetAll() {
         List<StudentEntity> list = null;
         try {

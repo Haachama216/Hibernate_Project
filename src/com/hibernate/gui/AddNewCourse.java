@@ -54,7 +54,7 @@ public class AddNewCourse extends JFrame {
 		this.setSemester = setSemester;
 		this.courseModel = courseModel;
 
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 376, 483);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -242,7 +242,10 @@ public class AddNewCourse extends JFrame {
 					course.setCourseRegis(setSemester.getCourseRegisSessionEntity());
 					course.setTeacher(teacherNameField.getText());
 					course.setRoom(roomField.getText());
-					course.setDay(dayComboBox.getSelectedItem().toString());
+					if (dayComboBox.getSelectedItem().toString().equals("chủ nhật"))
+						course.setDay(dayComboBox.getSelectedItem().toString());
+					else
+						course.setDay("Thứ " + dayComboBox.getSelectedItem().toString());
 					course.setTime(timeComboBox.getSelectedItem().toString());
 					course.setMaxSlot(Integer.parseInt(slotField.getText()));
 					CourseDAO.Save(course);
@@ -250,7 +253,7 @@ public class AddNewCourse extends JFrame {
 							course.getCourseid(), selectedSubject.getMamh(),
 							selectedSubject.getTenmh(), selectedSubject.getSotinchi(),
 							course.getTeacher(), course.getRoom(),
-							"Thứ " + course.getDay(), course.getTime(),
+							course.getDay(), course.getTime(),
 							course.getMaxSlot()
 					});
 				}

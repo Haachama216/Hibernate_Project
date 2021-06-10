@@ -24,22 +24,6 @@ public class ClassDAO {
         return classEntity;
     }
 
-    public static Set<StudentEntity> GetStudentList(int classid) {
-        Set<StudentEntity> list = null;
-        Session session = null;
-        try {
-            session = HibernateUtil.GetSession();
-            ClassEntity classEntity = session.get(ClassEntity.class, classid);
-            list = classEntity.getStudentList();
-            //unproxy this object
-            list.size();
-        }
-        finally {
-            assert session != null;
-            session.close();
-        }
-        return list;
-    }
     public static List<ClassEntity> GetAll() {
         List<ClassEntity> list = null;
         try {
