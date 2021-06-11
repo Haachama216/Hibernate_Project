@@ -21,11 +21,11 @@
         <property name="faculty">
             <column name="faculty" sql-type="varchar(50)" length="50"/>
         </property>
-        <property name="sex">
+        <property name="gender">
             <column name="gender" sql-type="varchar(6)" length="6"/>
         </property>
         <property name="phonenumber">
-            <column name="phonenumber" sql-type="varchar(10)" length="10"/>
+            <column name="phonenumber" sql-type="varchar(20)" length="20"/>
         </property>
         <property name="email">
             <column name="email" sql-type="varchar(50)" length="50"/>

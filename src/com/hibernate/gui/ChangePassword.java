@@ -18,6 +18,7 @@ import javax.swing.JPasswordField;
 import javax.swing.JTable;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.hibernate.dao.GiaovuAccountDAO;
 import com.hibernate.pojo.GiaovuAccountEntity;
@@ -136,6 +137,7 @@ public class ChangePassword extends JFrame {
 				GiaovuAccountDAO.Update(account);
 				List<GiaovuAccountEntity> list = GiaovuAccountDAO.GetAll();
 				DefaultTableModel model = new DefaultTableModel();
+				TableRowSorter<DefaultTableModel>  sorter = new TableRowSorter<>(model);
 				model.setColumnIdentifiers(new Object[]{
 						"id","Username","Password","Name",
 						"Faculty","Gender","Phone number", "Email"});
@@ -143,11 +145,13 @@ public class ChangePassword extends JFrame {
 					model.addRow(new Object[]{
 							acc.getGiaovuid(), acc.getUsername(),
 							acc.getPassword(), acc.getName(),
-							acc.getFaculty(), acc.getSex(),
+							acc.getFaculty(), acc.getGender(),
 							acc.getPhonenumber(), acc.getEmail()
 					});
 				}
 				giaovuTable.setModel(model);
+				giaovuTable.setRowSorter(null);
+				giaovuTable.setRowSorter(sorter);
 				JOptionPane.showMessageDialog(null,"Your password has been updated",
 						"Successfully",JOptionPane.INFORMATION_MESSAGE);
 				dispose();

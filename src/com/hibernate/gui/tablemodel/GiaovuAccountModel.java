@@ -80,7 +80,7 @@ public class GiaovuAccountModel extends AbstractTableModel {
                 account.setFaculty(aValue.toString());
                 break;
             case 5:
-                account.setSex(aValue.toString());
+                account.setGender(aValue.toString());
                 break;
             case 6:
                 account.setPhonenumber(aValue.toString());
@@ -101,7 +101,7 @@ public class GiaovuAccountModel extends AbstractTableModel {
             case 2 -> account.getPassword();
             case 3 -> account.getName();
             case 4 -> account.getFaculty();
-            case 5 -> account.getSex();
+            case 5 -> account.getGender();
             case 6 -> account.getPhonenumber();
             case 7 -> account.getEmail();
             default -> null;

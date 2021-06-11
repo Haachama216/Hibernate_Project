@@ -9,14 +9,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.hibernate.dao.GiaovuAccountDAO;
 import com.hibernate.pojo.GiaovuAccountEntity;
@@ -29,7 +24,7 @@ public class Register extends JFrame {
 	private JTextField phoneField;
 	private JTextField emailField;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
-	private DefaultTableModel model;
+	private JTable table;
 	private GiaovuAccountEntity selectedAccount;
 	private int selectedRow;
 
@@ -40,8 +35,8 @@ public class Register extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Register(DefaultTableModel model, GiaovuAccountEntity selectedAccount,int selectedRow) {
-		this.model = model;
+	public Register(JTable table, GiaovuAccountEntity selectedAccount,int selectedRow) {
+		this.table = table;
 		this.selectedRow = selectedRow;
 		this.selectedAccount = selectedAccount;
 		
@@ -181,7 +176,7 @@ public class Register extends JFrame {
 		panel.add(female, gbc_female);
 		if (selectedAccount != null) {
 			buttonGroup.setSelected(
-					switch(selectedAccount.getSex()) {
+					switch(selectedAccount.getGender()) {
 						case "Male" -> male.getModel();
 						case "Female" -> female.getModel();
 						default -> null;
@@ -253,33 +248,41 @@ public class Register extends JFrame {
 					account.setFaculty(facultyField.getText());
 					account.setPhonenumber(phoneField.getText());
 					account.setEmail(emailField.getText());
-					account.setSex(buttonGroup.getSelection().getActionCommand());
+					account.setGender(buttonGroup.getSelection().getActionCommand());
 					GiaovuAccountDAO.Save(account);
-					if (model != null)
+					if (table != null) {
+						DefaultTableModel model = (DefaultTableModel) table.getModel();
+						TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+						table.setRowSorter(null);
+						table.setRowSorter(sorter);
 						model.addRow(new Object[]{
 								account.getGiaovuid(), account.getUsername(),
 								account.getPassword(), account.getName(),
-								account.getFaculty(), account.getSex(),
+								account.getFaculty(), account.getGender(),
 								account.getPhonenumber(), account.getEmail()
 						});
+					}
 				}
 				else {
 					selectedAccount.setUsername(usernameField.getText());
 					selectedAccount.setPassword(passwordField.getText());
 					selectedAccount.setName(nameField.getText());
 					selectedAccount.setFaculty(facultyField.getText());
-					selectedAccount.setSex(buttonGroup.getSelection().getActionCommand());
+					selectedAccount.setGender(buttonGroup.getSelection().getActionCommand());
 					selectedAccount.setPhonenumber(phoneField.getText());
 					selectedAccount.setEmail(emailField.getText());
 					GiaovuAccountDAO.Update(selectedAccount);
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+					table.setRowSorter(null);
+					table.setRowSorter(sorter);
 					model.setValueAt(selectedAccount.getUsername(),selectedRow,1);
 					model.setValueAt(selectedAccount.getPassword(), selectedRow,2);
 					model.setValueAt(selectedAccount.getName(),selectedRow,3);
 					model.setValueAt(selectedAccount.getFaculty(),selectedRow,4);
-					model.setValueAt(selectedAccount.getSex(),selectedRow,5);
+					model.setValueAt(selectedAccount.getGender(),selectedRow,5);
 					model.setValueAt(selectedAccount.getPhonenumber(),selectedRow,6);
 					model.setValueAt(selectedAccount.getEmail(),selectedRow,7);
-
 				}
 				dispose();
 			}

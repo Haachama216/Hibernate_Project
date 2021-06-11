@@ -8,20 +8,20 @@ public class GiaovuAccountEntity {
     private String password;
     private String name;
     private String faculty;
-    private String sex;
+    private String gender;
     private String phonenumber;
     private String email;
 
     public GiaovuAccountEntity() {}
 
     public GiaovuAccountEntity(int giaovuid, String username, String password, String name,
-                               String faculty, String sex, String phonenumber, String email) {
+                               String faculty, String gender, String phonenumber, String email) {
         this.giaovuid = giaovuid;
         this.username = username;
         this.password = password;
         this.name = name;
         this.faculty = faculty;
-        this.sex = sex;
+        this.gender = gender;
         this.phonenumber = phonenumber;
         this.email = email;
     }
@@ -32,7 +32,7 @@ public class GiaovuAccountEntity {
         this.password = data[2].toString();
         this.name = data[3].toString();
         this.faculty = data[4].toString();
-        this.sex = data[5].toString();
+        this.gender = data[5].toString();
         this.phonenumber = data[6].toString();
         this.email = data[7].toString();
     }
@@ -76,12 +76,12 @@ public class GiaovuAccountEntity {
         this.faculty = faculty;
     }
 
-    public String getSex() {
-        return sex;
+    public String getGender() {
+        return gender;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setGender(String sex) {
+        this.gender = sex;
     }
 
     public String getPhonenumber() {
@@ -105,11 +105,11 @@ public class GiaovuAccountEntity {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         GiaovuAccountEntity that = (GiaovuAccountEntity) o;
-        return giaovuid == that.giaovuid && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(name, that.name) && Objects.equals(faculty, that.faculty) && Objects.equals(sex, that.sex) && Objects.equals(phonenumber, that.phonenumber) && Objects.equals(email, that.email);
+        return giaovuid == that.giaovuid && Objects.equals(username, that.username) && Objects.equals(password, that.password) && Objects.equals(name, that.name) && Objects.equals(faculty, that.faculty) && Objects.equals(gender, that.gender) && Objects.equals(phonenumber, that.phonenumber) && Objects.equals(email, that.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(giaovuid, username, password, name, faculty, sex, phonenumber, email);
+        return Objects.hash(giaovuid, username, password, name, faculty, gender, phonenumber, email);
     }
 }

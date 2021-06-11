@@ -6,17 +6,15 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.Set;
 
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
+import com.hibernate.dao.ClassDAO;
 import com.hibernate.dao.StudentDAO;
 import com.hibernate.pojo.ClassEntity;
 import com.hibernate.pojo.StudentEntity;
@@ -33,20 +31,33 @@ public class AddUpdateStudent extends JFrame {
 	private final ButtonGroup buttonGroup = new ButtonGroup();
 	private JButton applyButton;
 	private JButton cancelButton;
-	private DefaultTableModel model;
+	private JTable studentTable;
+	private JTable classTable;
 	private ClassEntity selectedClass;
 	private int selectedRow;
 	private StudentEntity selectedStudent;
 
-	/**
-	 * Launch the application.
-	 */
-	
-	/**
-	 * Create the frame.
-	 */
-	public AddUpdateStudent(DefaultTableModel model, ClassEntity selectedClass, StudentEntity selectedStudent, int selectedRow) {
-		this.model = model;
+	private void ReloadClassTable(JTable classTable) {
+		List<ClassEntity> list = ClassDAO.GetAll();
+		DefaultTableModel model = new DefaultTableModel(
+				new Object[][]{},
+				new Object[]{"id", "Class name", "Total students", "Male students", "Female students"}
+		);
+		for (ClassEntity classEntity : list) {
+			model.addRow(new Object[]{
+					classEntity.getClassid(), classEntity.getClassname(),
+					classEntity.getTongsinhvien(),
+					classEntity.getTongsinhvienNam(), classEntity.getTongsinhvienNu()
+			});
+		}
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+		classTable.setRowSorter(null);
+		classTable.setModel(model);
+		classTable.setRowSorter(sorter);
+	}
+	public AddUpdateStudent(JTable studentTable, JTable classTable, ClassEntity selectedClass, StudentEntity selectedStudent, int selectedRow) {
+		this.studentTable = studentTable;
+		this.classTable = classTable;
 		this.selectedClass = selectedClass;
 		this.selectedStudent = selectedStudent;
 		this.selectedRow = selectedRow;
@@ -144,6 +155,7 @@ public class AddUpdateStudent extends JFrame {
 		applyButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				TableRowSorter<DefaultTableModel> sorter = null;
 				if (selectedStudent == null) {
 					StudentEntity student = new StudentEntity();
 					student.setMssv(mssvField.getText());
@@ -153,21 +165,31 @@ public class AddUpdateStudent extends JFrame {
 					student.setPassword(student.getMssv());
 					student.setClassEntity(selectedClass);
 					StudentDAO.Save(student);
+					DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+					sorter = new TableRowSorter<>(model);
+					studentTable.setRowSorter(null);
+					studentTable.setRowSorter(sorter);
 					model.addRow(new Object[]{
 							student.getStudentid(), student.getMssv(),
 							student.getTenhs(), student.getGioitinh(),
 							student.getClassEntity().getClassname()
 					});
+
 				}
 				else if (selectedStudent != null && selectedRow != -1) {
 					selectedStudent.setMssv(mssvField.getText());
 					selectedStudent.setTenhs(nameField.getText());
 					selectedStudent.setGioitinh(buttonGroup.getSelection().getActionCommand());
 					StudentDAO.Update(selectedStudent);
+					DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+					sorter = new TableRowSorter<>(model);
+					studentTable.setRowSorter(null);
+					studentTable.setRowSorter(sorter);
 					model.setValueAt(selectedStudent.getMssv(),selectedRow,1);
 					model.setValueAt(selectedStudent.getTenhs(),selectedRow,2);
 					model.setValueAt(selectedStudent.getGioitinh(),selectedRow,3);
 				}
+				ReloadClassTable(classTable);
 				dispose();
 			}
 		});

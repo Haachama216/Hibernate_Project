@@ -8,15 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Objects;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.hibernate.dao.SemesterDAO;
 import com.hibernate.pojo.SemesterEntity;
@@ -33,7 +28,7 @@ public class AddSemester extends JFrame {
 	private JTextField endDateField;
 	private JButton apply;
 	private JButton cancel;
-	private DefaultTableModel model;
+	private JTable table;
 	/**
 	 * Launch the application.
 	 */
@@ -42,9 +37,9 @@ public class AddSemester extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AddSemester(DefaultTableModel model) {
-		this.model = model;
-		
+	public AddSemester(JTable table) {
+		this.table = table;
+
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 256, 236);
 		contentPane = new JPanel();
@@ -133,6 +128,8 @@ public class AddSemester extends JFrame {
 		apply.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				int modelrowCount = 0;
+				int rowSorterCount = 0;
 				try {
 					SemesterEntity semester = new SemesterEntity();
 					semester.setTenhk(Objects.requireNonNull(comboBox.getSelectedItem()).toString());
@@ -140,6 +137,10 @@ public class AddSemester extends JFrame {
 					semester.setNgaybatdau(startDateField.getText());
 					semester.setNgayketthuc(endDateField.getText());
 					SemesterDAO.Save(semester);
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					table.setRowSorter(null);
+					TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+					table.setRowSorter(sorter);
 					model.addRow(new Object[] {
 							semester.getHk_id(), semester.getTenhk(),
 							semester.getNamhoc(), semester.getNgaybatdau(),

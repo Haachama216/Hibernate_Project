@@ -8,15 +8,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.hibernate.dao.SubjectDAO;
 import com.hibernate.pojo.SemesterEntity;
@@ -36,7 +31,7 @@ public class AddUpdateSubject extends JFrame {
 	private SemesterEntity setSemester;
 	private int selectedRow;
 	private SubjectEntity selectedSubject;
-	private DefaultTableModel model = null;
+	private JTable table;
 	/**
 	 * Launch the application.
 	 */
@@ -44,9 +39,9 @@ public class AddUpdateSubject extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AddUpdateSubject(SemesterEntity setSemester, DefaultTableModel model, int selectedRow, SubjectEntity selectedSubject) {
+	public AddUpdateSubject(SemesterEntity setSemester,JTable table, int selectedRow, SubjectEntity selectedSubject) {
 		this.setSemester = setSemester;
-		this.model = model;
+		this.table = table;
 		this.selectedRow = selectedRow;
 		this.selectedSubject = selectedSubject;
 
@@ -147,6 +142,10 @@ public class AddUpdateSubject extends JFrame {
 					newSubject.setSotinchi((int) comboBox.getSelectedItem());
 					newSubject.setSemester(setSemester);
 					SubjectDAO.Save(newSubject);
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+					table.setRowSorter(null);
+					table.setRowSorter(sorter);
 					model.addRow(new Object[]{
 							newSubject.getSubjectid(), newSubject.getMamh(),
 							newSubject.getTenmh(), newSubject.getSotinchi()
@@ -157,6 +156,10 @@ public class AddUpdateSubject extends JFrame {
 					selectedSubject.setTenmh(nameField.getText());
 					selectedSubject.setSotinchi((int) comboBox.getSelectedItem());
 					SubjectDAO.Update(selectedSubject);
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
+					TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+					table.setRowSorter(null);
+					table.setRowSorter(sorter);
 					model.setValueAt(selectedSubject.getMamh(),selectedRow,1);
 					model.setValueAt(selectedSubject.getTenmh(),selectedRow,2);
 					model.setValueAt(selectedSubject.getSotinchi(),selectedRow,3);

@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.PatternSyntaxException;
 
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -26,8 +27,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.RowFilter;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.hibernate.dao.ClassDAO;
 import com.hibernate.dao.CourseDAO;
@@ -56,7 +61,7 @@ public class MainFrame extends JFrame {
 	private JRadioButton male;
 	private JRadioButton female;
 	private JTable giaovuAccountTable;
-	private JTextField textField;
+	private JTextField giaovuSearchField;
 	private JTable semesterTable;
 	private JTable subjectTable;
 	private JTextField subjectSearchField;
@@ -68,7 +73,7 @@ public class MainFrame extends JFrame {
 	private JTextField courseSearchField;
 	private JTable classTable;
 	private JTable studentTable;
-	private JTextField studetnSearchField;
+	private JTextField studentSearchField;
 	private JTextField classNameField;
 	private JPanel addClassPane;
 	/**
@@ -130,17 +135,33 @@ public class MainFrame extends JFrame {
 		gbc_giaovuSearch.gridy = 0;
 		giaovuFunctions.add(giaovuSearch, gbc_giaovuSearch);
 		
-		textField = new JTextField();
-		textField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.anchor = GridBagConstraints.NORTHWEST;
-		gbc_textField.insets = new Insets(0, 5, 5, 5);
-		gbc_textField.gridx = 1;
-		gbc_textField.gridy = 0;
-		giaovuFunctions.add(textField, gbc_textField);
-		textField.setColumns(20);
+		giaovuSearchField = new JTextField();
+		giaovuSearchField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				Filter(giaovuSearchField,giaovuAccountTable);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				Filter(giaovuSearchField,giaovuAccountTable);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				Filter(giaovuSearchField,giaovuAccountTable);
+			}
+		});
+		giaovuSearchField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		GridBagConstraints gbc_giaovuSearchField = new GridBagConstraints();
+		gbc_giaovuSearchField.insets = new Insets(0, 5, 5, 5);
+		gbc_giaovuSearchField.gridx = 1;
+		gbc_giaovuSearchField.gridy = 0;
+		giaovuFunctions.add(giaovuSearchField, gbc_giaovuSearchField);
+		giaovuSearchField.setColumns(20);
 				
 		JButton giaovuAddButton = new JButton("Add");
+		giaovuAddButton.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
 		GridBagConstraints gbc_giaovuAddButton = new GridBagConstraints();
 		gbc_giaovuAddButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_giaovuAddButton.insets = new Insets(0, 5, 5, 5);
@@ -151,12 +172,13 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel) giaovuAccountTable.getModel();
-				Register frame = new Register(model,null,-1);
+				Register frame = new Register(giaovuAccountTable,null,-1);
 				frame.setVisible(true);
 			}
 		});
 		
 		JButton giaovuUpdateButton = new JButton("Update");
+		giaovuUpdateButton.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
 		GridBagConstraints gbc_giaovuUpdateButton = new GridBagConstraints();
 		gbc_giaovuUpdateButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_giaovuUpdateButton.insets = new Insets(0, 5, 5, 5);
@@ -172,16 +194,18 @@ public class MainFrame extends JFrame {
 							"None of row selected",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = giaovuAccountTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) giaovuAccountTable.getModel();
 					GiaovuAccountEntity selectedAccount = GiaovuAccountDAO.Get((String) model.getValueAt(selectedRow, 1)
 							, (String) model.getValueAt(selectedRow, 2));
-					Register frame = new Register(model, selectedAccount, selectedRow);
+					Register frame = new Register(giaovuAccountTable, selectedAccount, selectedRow);
 					frame.setVisible(true);
 				}
 			}
 		});
 
 		JButton giaovuDeleteButton = new JButton("Delete");
+		giaovuDeleteButton.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
 		GridBagConstraints gbc_giaovuDeleteButton = new GridBagConstraints();
 		gbc_giaovuDeleteButton.fill = GridBagConstraints.HORIZONTAL;
 		gbc_giaovuDeleteButton.insets = new Insets(0, 5, 5, 5);
@@ -197,6 +221,7 @@ public class MainFrame extends JFrame {
 							"None of row selected",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = giaovuAccountTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) giaovuAccountTable.getModel();
 					GiaovuAccountEntity account = GiaovuAccountDAO.Get((String) model.getValueAt(selectedRow, 1),
 							(String) model.getValueAt(selectedRow, 2));
@@ -258,7 +283,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel) semesterTable.getModel();
-				AddSemester frame = new AddSemester(model);
+				AddSemester frame = new AddSemester(semesterTable);
 				frame.setVisible(true);
 			}
 		});
@@ -279,12 +304,12 @@ public class MainFrame extends JFrame {
 							"Error", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = semesterTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) semesterTable.getModel();
-					setSemester = SemesterDAO.Get((int) model.getValueAt(selectedRow,0));
+					setSemester = SemesterDAO.Get((int) model.getValueAt(selectedRow, 0));
 					if (setSemester.getCourseRegisSessionEntity() == null) {
 						AddCourseRegis.setVisible(true);
-					}
-					else {
+					} else {
 						AddCourseRegis.setVisible(false);
 						LoadDataIntoTable(new CourseEntity(), coursetable);
 					}
@@ -312,9 +337,12 @@ public class MainFrame extends JFrame {
 							"None of row selected",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = semesterTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) semesterTable.getModel();
 					SemesterEntity semester = SemesterDAO.Get((int) model.getValueAt(selectedRow, 0));
 					SemesterDAO.Delete(semester);
+					semesterTable.setRowSorter(null);
+					semesterTable.setRowSorter(GetNewSorter(model));
 					model.removeRow(selectedRow);
 					DefaultTableModel subjectmodel = (DefaultTableModel) subjectTable.getModel();
 					subjectmodel.setRowCount(0);
@@ -388,6 +416,22 @@ public class MainFrame extends JFrame {
 		subjectFunctions.add(subjectSearch, gbc_subjectSearch);
 		
 		subjectSearchField = new JTextField();
+		subjectSearchField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				Filter(subjectSearchField,subjectTable);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				Filter(subjectSearchField,subjectTable);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				Filter(subjectSearchField,subjectTable);
+			}
+		});
 		subjectSearchField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		GridBagConstraints gbc_subjectSearchField = new GridBagConstraints();
 		gbc_subjectSearchField.insets = new Insets(0, 0, 0, 5);
@@ -401,7 +445,7 @@ public class MainFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel) subjectTable.getModel();
-				AddUpdateSubject frame = new AddUpdateSubject(setSemester,model,-1,null);
+				AddUpdateSubject frame = new AddUpdateSubject(setSemester,subjectTable,-1,null);
 				frame.setVisible(true);
 			}
 		});
@@ -423,8 +467,9 @@ public class MainFrame extends JFrame {
 							"None of row selected",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = subjectTable.convertRowIndexToModel(selectedRow);
 					SubjectEntity selectedSubject = SubjectDAO.Get((int) model.getValueAt(selectedRow, 0));
-					AddUpdateSubject frame = new AddUpdateSubject(setSemester, model, selectedRow, selectedSubject);
+					AddUpdateSubject frame = new AddUpdateSubject(setSemester, subjectTable, selectedRow, selectedSubject);
 					frame.setVisible(true);
 				}
 			}
@@ -446,7 +491,11 @@ public class MainFrame extends JFrame {
 							"None of row selected",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = subjectTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) subjectTable.getModel();
+					TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+					subjectTable.setRowSorter(null);
+					subjectTable.setRowSorter(sorter);
 					SubjectEntity selectedSubject = SubjectDAO.Get((int) model.getValueAt(selectedRow, 0));
 					SubjectDAO.Delete(selectedSubject);
 					model.removeRow(selectedRow);
@@ -534,7 +583,11 @@ public class MainFrame extends JFrame {
 							"None of row selected",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = subjectTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) classTable.getModel();
+					TableRowSorter<DefaultTableModel> sorter = GetNewSorter(model);
+					classTable.setRowSorter(null);
+					classTable.setRowSorter(sorter);
 					ClassEntity classEntity = ClassDAO.Get((int) model.getValueAt(selectedRow, 0));
 					ClassDAO.Delete(classEntity);
 					model.removeRow(selectedRow);
@@ -560,6 +613,7 @@ public class MainFrame extends JFrame {
 							"None of row selected", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = classTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) classTable.getModel();
 					selectedClass = ClassDAO.Get((int) model.getValueAt(selectedRow,0));
 					CardLayout cards = (CardLayout) classTab.getLayout();
@@ -611,6 +665,9 @@ public class MainFrame extends JFrame {
 				ClassEntity classEntity = new ClassEntity();
 				classEntity.setClassname(classNameField.getText());
 				DefaultTableModel model = (DefaultTableModel) classTable.getModel();
+				TableRowSorter<DefaultTableModel> sorter = GetNewSorter(model);
+				classTable.setRowSorter(null);
+				classTable.setRowSorter(sorter);
 				ClassDAO.Save(classEntity);
 				model.addRow(new Object[]{
 						classEntity.getClassid(), classEntity.getClassname(),
@@ -681,22 +738,38 @@ public class MainFrame extends JFrame {
 		gbc_studentSearch.gridy = 0;
 		studentFunctions.add(studentSearch, gbc_studentSearch);
 		
-		studetnSearchField = new JTextField();
-		studetnSearchField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
+		studentSearchField = new JTextField();
+		studentSearchField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				Filter(studentSearchField,studentTable);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				Filter(studentSearchField,studentTable);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				Filter(studentSearchField,studentTable);
+			}
+		});
+		studentSearchField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		GridBagConstraints gbc_studetnSearchField = new GridBagConstraints();
 		gbc_studetnSearchField.insets = new Insets(0, 0, 0, 5);
 		gbc_studetnSearchField.anchor = GridBagConstraints.WEST;
 		gbc_studetnSearchField.gridx = 1;
 		gbc_studetnSearchField.gridy = 0;
-		studentFunctions.add(studetnSearchField, gbc_studetnSearchField);
-		studetnSearchField.setColumns(20);
+		studentFunctions.add(studentSearchField, gbc_studetnSearchField);
+		studentSearchField.setColumns(20);
 		
 		JButton studentAddButton = new JButton("Add");
 		studentAddButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
-				AddUpdateStudent frame = new AddUpdateStudent(model,selectedClass,null,-1);
+				AddUpdateStudent frame = new AddUpdateStudent(studentTable, classTable, selectedClass, null, -1);
 				frame.setVisible(true);
 			}
 		});
@@ -716,10 +789,12 @@ public class MainFrame extends JFrame {
 					JOptionPane.showMessageDialog(null,"Select a row first",
 							"None of row selected", JOptionPane.ERROR_MESSAGE);
 				else {
+					selectedRow = studentTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
 					StudentEntity selectedStudent = StudentDAO.Get((int) model.getValueAt(selectedRow,0));
-					AddUpdateStudent frame = new AddUpdateStudent(model,selectedClass,selectedStudent,selectedRow);
+					AddUpdateStudent frame = new AddUpdateStudent(studentTable,classTable,selectedClass,selectedStudent,selectedRow);
 					frame.setVisible(true);
+					LoadDataIntoTable(new ClassEntity(),classTable);
 				}
 			}
 		});
@@ -739,10 +814,15 @@ public class MainFrame extends JFrame {
 					JOptionPane.showMessageDialog(null,"Select a row first",
 							"None of row selected", JOptionPane.ERROR_MESSAGE);
 				else {
+					selectedRow = studentTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
+					TableRowSorter<DefaultTableModel> sorter = GetNewSorter(model);
+					studentTable.setRowSorter(null);
+					studentTable.setRowSorter(sorter);
 					StudentEntity student = StudentDAO.Get((int) model.getValueAt(selectedRow,0));
 					StudentDAO.Delete(student);
 					model.removeRow(selectedRow);
+					LoadDataIntoTable(new ClassEntity(),classTable);
 				}
 			}
 		});
@@ -772,6 +852,7 @@ public class MainFrame extends JFrame {
 							"None of row selected", JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = studentTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) studentTable.getModel();
 					StudentEntity student = StudentDAO.Get((int) model.getValueAt(selectedRow,0));
 					student.setPassword("password");
@@ -806,9 +887,6 @@ public class MainFrame extends JFrame {
 				new Object[]{"id", "MSSV", "Student name", "Gender", "Class"}
 		));
 		studentScrollPane.setViewportView(studentTable);
-		
-		JPanel students = new JPanel();
-		tabbedPane.addTab("Sinh vi\u00EAn", null, students, null);
 		
 		
 		
@@ -891,6 +969,9 @@ public class MainFrame extends JFrame {
 				setSemester.setCourseRegisSessionEntity(c);
 				SemesterDAO.Update(setSemester);
 				DefaultTableModel model = (DefaultTableModel) courseRegisTable.getModel();
+				TableRowSorter<DefaultTableModel> sorter = GetNewSorter(model);
+				courseRegisTable.setRowSorter(null);
+				courseRegisTable.setRowSorter(sorter);
 				model.addRow(new Object[] {
 						c.getCourseRegisId(), c.getSemester().getTenhk(),
 						c.getSemester().getNamhoc(), c.getNgaybatdau(),
@@ -968,6 +1049,22 @@ public class MainFrame extends JFrame {
 		panel_1.add(courseSearch, gbc_courseSearch);
 		
 		courseSearchField = new JTextField();
+		courseSearchField.getDocument().addDocumentListener(new DocumentListener() {
+			@Override
+			public void insertUpdate(DocumentEvent e) {
+				Filter(courseSearchField,coursetable);
+			}
+
+			@Override
+			public void removeUpdate(DocumentEvent e) {
+				Filter(courseSearchField,coursetable);
+			}
+
+			@Override
+			public void changedUpdate(DocumentEvent e) {
+				Filter(courseSearchField,coursetable);
+			}
+		});
 		courseSearchField.setFont(new Font("Times New Roman", Font.PLAIN, 14));
 		GridBagConstraints gbc_courseSearchField = new GridBagConstraints();
 		gbc_courseSearchField.insets = new Insets(0, 5, 5, 5);
@@ -981,14 +1078,13 @@ public class MainFrame extends JFrame {
 		courseAddButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				DefaultTableModel model = (DefaultTableModel) coursetable.getModel();
-				AddNewCourse frame = new AddNewCourse(setSemester,model);
+				AddNewCourse frame = new AddNewCourse(setSemester,coursetable);
 				frame.setVisible(true);
 			}
 		});
 		courseAddButton.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
 		GridBagConstraints gbc_courseAddButton = new GridBagConstraints();
-		gbc_courseAddButton.insets = new Insets(0, 0, 0, 5);
+		gbc_courseAddButton.insets = new Insets(5, 5, 5, 5);
 		gbc_courseAddButton.gridx = 2;
 		gbc_courseAddButton.gridy = 0;
 		panel_1.add(courseAddButton, gbc_courseAddButton);
@@ -1003,7 +1099,11 @@ public class MainFrame extends JFrame {
 							"None of row selected",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
+					selectedRow = coursetable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) coursetable.getModel();
+					TableRowSorter<DefaultTableModel> sorter = GetNewSorter(model);
+					coursetable.setRowSorter(null);
+					coursetable.setRowSorter(sorter);
 					CourseEntity course = CourseDAO.Get((int) model.getValueAt(selectedRow, 0));
 					CourseDAO.Delete(course);
 					model.removeRow(selectedRow);
@@ -1012,13 +1112,15 @@ public class MainFrame extends JFrame {
 		});
 		courseDeleteButton.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
 		GridBagConstraints gbc_courseDeleteButton = new GridBagConstraints();
-		gbc_courseDeleteButton.insets = new Insets(0, 0, 0, 5);
+		gbc_courseDeleteButton.insets = new Insets(5, 5, 5, 5);
 		gbc_courseDeleteButton.gridx = 3;
 		gbc_courseDeleteButton.gridy = 0;
 		panel_1.add(courseDeleteButton, gbc_courseDeleteButton);
 		
-		JButton studentList = new JButton("Students in class");
+		JButton studentList = new JButton("Students in course");
+		studentList.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
 		GridBagConstraints gbc_studentList = new GridBagConstraints();
+		gbc_studentList.insets = new Insets(5, 5, 5, 5);
 		gbc_studentList.gridx = 4;
 		gbc_studentList.gridy = 0;
 		panel_1.add(studentList, gbc_studentList);
@@ -1144,7 +1246,7 @@ public class MainFrame extends JFrame {
 		gbc_femaleRadioButton.gridy = 5;
 		giaovuInfo.add(female, gbc_femaleRadioButton);
 
-		SetSelectedButton(logged_account.getSex());
+		SetSelectedButton(logged_account.getGender());
 
 		JPanel buttonFunctionsPane = new JPanel();
 		GridBagConstraints gbc_buttonFunctionsPane = new GridBagConstraints();
@@ -1162,7 +1264,7 @@ public class MainFrame extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				logged_account.setName(nameField.getText());
 				logged_account.setFaculty(facultyField.getText());
-				logged_account.setSex(buttonGroup.getSelection().getActionCommand());
+				logged_account.setGender(buttonGroup.getSelection().getActionCommand());
 				logged_account.setPhonenumber(phoneField.getText());
 				logged_account.setEmail(emailField.getText());
 				GiaovuAccountDAO.Update(logged_account);
@@ -1199,13 +1301,31 @@ public class MainFrame extends JFrame {
 		buttonFunctionsPane.add(logout);
 	}
 
-	private void SetSelectedButton(String sex) {
-		if (sex.equals("Male")) {
+	private void SetSelectedButton(String gender) {
+		if (gender.equals("Male")) {
 			buttonGroup.setSelected(male.getModel(),true);
 		}
 		else {
 			buttonGroup.setSelected(female.getModel(), true);
 		}
+	}
+
+
+
+	//Additional functions
+	private TableRowSorter<DefaultTableModel> GetNewSorter(DefaultTableModel model) {
+		return new TableRowSorter<DefaultTableModel>(model);
+	}
+	private void Filter(JTextField FilterField, JTable table) {
+		RowFilter<DefaultTableModel,Object> rowFilter = null;
+		try {
+			rowFilter = RowFilter.regexFilter(FilterField.getText());
+		}
+		catch (PatternSyntaxException e) {
+			e.printStackTrace();
+		}
+		TableRowSorter<DefaultTableModel> sorter = (TableRowSorter) table.getRowSorter();
+		sorter.setRowFilter(rowFilter);
 	}
 
 	private void LoadDataIntoTable(Object obj , JTable table) {
@@ -1218,6 +1338,7 @@ public class MainFrame extends JFrame {
 				return obj.getClass();
 			}
 		};
+		TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
 		if (obj instanceof GiaovuAccountEntity) {
 			List<GiaovuAccountEntity> list = GiaovuAccountDAO.GetAll();
 			model.setColumnIdentifiers(new Object[]{
@@ -1227,7 +1348,7 @@ public class MainFrame extends JFrame {
 				model.addRow(new Object[]{
 						acc.getGiaovuid(), acc.getUsername(),
 						acc.getPassword(), acc.getName(),
-						acc.getFaculty(), acc.getSex(),
+						acc.getFaculty(), acc.getGender(),
 						acc.getPhonenumber(), acc.getEmail()
 				});
 			}
@@ -1313,6 +1434,8 @@ public class MainFrame extends JFrame {
 				});
 			}
 		}
+		table.setRowSorter(null);
 		table.setModel(model);
+		table.setRowSorter(sorter);
 	}
 }

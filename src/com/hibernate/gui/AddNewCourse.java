@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.hibernate.dao.CourseDAO;
 import com.hibernate.dao.SemesterDAO;
@@ -41,7 +42,7 @@ public class AddNewCourse extends JFrame {
 	private JTable subjectTable;
 	private SemesterEntity setSemester;
 	private SubjectEntity selectedSubject;
-	private DefaultTableModel courseModel;
+	private JTable table;
 
 	/**
 	 * Launch the application.
@@ -50,9 +51,9 @@ public class AddNewCourse extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public AddNewCourse(SemesterEntity setSemester, DefaultTableModel courseModel) {
+	public AddNewCourse(SemesterEntity setSemester, JTable table) {
 		this.setSemester = setSemester;
-		this.courseModel = courseModel;
+		this.table = table;
 
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 		setBounds(100, 100, 376, 483);
@@ -249,6 +250,10 @@ public class AddNewCourse extends JFrame {
 					course.setTime(timeComboBox.getSelectedItem().toString());
 					course.setMaxSlot(Integer.parseInt(slotField.getText()));
 					CourseDAO.Save(course);
+					DefaultTableModel courseModel = (DefaultTableModel) table.getModel();
+					TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(courseModel);
+					table.setRowSorter(null);
+					table.setRowSorter(sorter);
 					courseModel.addRow(new Object[]{
 							course.getCourseid(), selectedSubject.getMamh(),
 							selectedSubject.getTenmh(), selectedSubject.getSotinchi(),
