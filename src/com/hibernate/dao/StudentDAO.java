@@ -24,6 +24,22 @@ public class StudentDAO {
         return student;
     }
 
+    public static StudentEntity Get(String username, String password) {
+        StudentEntity student = null;
+        Session session = null;
+        try {
+            session = HibernateUtil.GetSession();
+            Query query = session.createQuery("from StudentEntity " +
+                    "where username = :username and password = :password");
+            query.setParameter("username", username).setParameter("password", password);
+            student = (StudentEntity) query.uniqueResult();
+        }
+        finally {
+            assert session != null;
+            session.close();
+        }
+        return student;
+    }
     public static Set<CourseEntity> GetCourseList(int studentid) {
         Set<CourseEntity> list = null;
         Session session = null;

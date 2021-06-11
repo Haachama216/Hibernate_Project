@@ -51,6 +51,7 @@ import com.hibernate.pojo.SubjectEntity;
 
 public class MainFrame extends JFrame {
 	private GiaovuAccountEntity logged_account = null;
+	private LoginGUI.CurrentSemester currentSemester;
 	private SemesterEntity setSemester = null;
 	private ClassEntity selectedClass = null;
 	private final ButtonGroup buttonGroup = new ButtonGroup();
@@ -83,8 +84,9 @@ public class MainFrame extends JFrame {
 	/**male
 	 * Create the frame.
 	 */
-	public MainFrame(GiaovuAccountEntity logged_account) {
+	public MainFrame(GiaovuAccountEntity logged_account, LoginGUI.CurrentSemester currentSemester) {
 		this.logged_account = logged_account;
+		this.currentSemester = currentSemester;
 
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1300, 735);
@@ -307,6 +309,7 @@ public class MainFrame extends JFrame {
 					selectedRow = semesterTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) semesterTable.getModel();
 					setSemester = SemesterDAO.Get((int) model.getValueAt(selectedRow, 0));
+					currentSemester.SetsetSemester(setSemester);
 					if (setSemester.getCourseRegisSessionEntity() == null) {
 						AddCourseRegis.setVisible(true);
 					} else {
