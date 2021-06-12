@@ -35,8 +35,6 @@ public class Main {
                 HibernateUtil.BuildSessionFactory();
                 LoginGUI frame = new LoginGUI();
                 frame.setVisible(true);
-//                AddNewCourse frame = new AddNewCourse();
-//                frame.setVisible(true);
             }
         });
     }
