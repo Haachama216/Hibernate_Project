@@ -47,7 +47,7 @@ public class ChangePassword extends JFrame {
 		giaovuTable = table;
 
 		setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		setBounds(100, 100, 309, 180);
+		setBounds(100, 100, 309, 263);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -61,7 +61,7 @@ public class ChangePassword extends JFrame {
 		JLabel old = new JLabel("Old password");
 		old.setFont(new Font("Times New Roman", Font.BOLD, 12));
 		GridBagConstraints gbc_old = new GridBagConstraints();
-		gbc_old.insets = new Insets(0, 0, 5, 5);
+		gbc_old.insets = new Insets(5, 5, 5, 5);
 		gbc_old.gridx = 0;
 		gbc_old.gridy = 0;
 		contentPane.add(old, gbc_old);
@@ -70,7 +70,7 @@ public class ChangePassword extends JFrame {
 		passwordField.setColumns(15);
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
 		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
+		gbc_passwordField.insets = new Insets(5, 5, 5, 5);
 		gbc_passwordField.gridx = 1;
 		gbc_passwordField.gridy = 0;
 		contentPane.add(passwordField, gbc_passwordField);
@@ -78,7 +78,7 @@ public class ChangePassword extends JFrame {
 		JLabel newPass = new JLabel("New password");
 		newPass.setFont(new Font("Times New Roman", Font.BOLD, 12));
 		GridBagConstraints gbc_newPass = new GridBagConstraints();
-		gbc_newPass.insets = new Insets(0, 0, 5, 5);
+		gbc_newPass.insets = new Insets(5, 5, 5, 5);
 		gbc_newPass.gridx = 0;
 		gbc_newPass.gridy = 1;
 		contentPane.add(newPass, gbc_newPass);
@@ -87,7 +87,7 @@ public class ChangePassword extends JFrame {
 		passwordField_1.setColumns(15);
 		GridBagConstraints gbc_passwordField_1 = new GridBagConstraints();
 		gbc_passwordField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_passwordField_1.insets = new Insets(0, 0, 5, 5);
+		gbc_passwordField_1.insets = new Insets(5, 5, 5, 5);
 		gbc_passwordField_1.gridx = 1;
 		gbc_passwordField_1.gridy = 1;
 		contentPane.add(passwordField_1, gbc_passwordField_1);
@@ -95,7 +95,7 @@ public class ChangePassword extends JFrame {
 		JLabel retype = new JLabel("Re-type");
 		retype.setFont(new Font("Times New Roman", Font.BOLD, 12));
 		GridBagConstraints gbc_retype = new GridBagConstraints();
-		gbc_retype.insets = new Insets(0, 0, 5, 5);
+		gbc_retype.insets = new Insets(5, 5, 5, 5);
 		gbc_retype.gridx = 0;
 		gbc_retype.gridy = 2;
 		contentPane.add(retype, gbc_retype);
@@ -104,7 +104,7 @@ public class ChangePassword extends JFrame {
 		passwordField_2.setColumns(15);
 		GridBagConstraints gbc_passwordField_2 = new GridBagConstraints();
 		gbc_passwordField_2.fill = GridBagConstraints.HORIZONTAL;
-		gbc_passwordField_2.insets = new Insets(0, 0, 5, 5);
+		gbc_passwordField_2.insets = new Insets(5, 5, 5, 5);
 		gbc_passwordField_2.gridx = 1;
 		gbc_passwordField_2.gridy = 2;
 		contentPane.add(passwordField_2, gbc_passwordField_2);
@@ -125,7 +125,8 @@ public class ChangePassword extends JFrame {
 			}
 		});
 		GridBagConstraints gbc_showpass = new GridBagConstraints();
-		gbc_showpass.insets = new Insets(0, 0, 5, 5);
+		gbc_showpass.gridwidth = 2;
+		gbc_showpass.insets = new Insets(10, 0, 5, 5);
 		gbc_showpass.gridx = 0;
 		gbc_showpass.gridy = 3;
 		contentPane.add(showpass, gbc_showpass);
@@ -159,7 +160,8 @@ public class ChangePassword extends JFrame {
 		});
 		apply.setFont(new Font("Times New Roman", Font.BOLD, 12));
 		GridBagConstraints gbc_apply = new GridBagConstraints();
-		gbc_apply.insets = new Insets(0, 0, 0, 5);
+		gbc_apply.anchor = GridBagConstraints.EAST;
+		gbc_apply.insets = new Insets(10, 0, 5, 5);
 		gbc_apply.gridx = 0;
 		gbc_apply.gridy = 4;
 		contentPane.add(apply, gbc_apply);
@@ -172,6 +174,7 @@ public class ChangePassword extends JFrame {
 		});
 		cancle.setFont(new Font("Times New Roman", Font.BOLD, 12));
 		GridBagConstraints gbc_cancle = new GridBagConstraints();
+		gbc_cancle.insets = new Insets(10, 0, 5, 5);
 		gbc_cancle.gridx = 1;
 		gbc_cancle.gridy = 4;
 		contentPane.add(cancle, gbc_cancle);

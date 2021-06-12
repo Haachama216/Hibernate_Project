@@ -30,7 +30,7 @@
         <many-to-one name="courseRegis" class="com.hibernate.pojo.CourseRegisSessionEntity" cascade="none" lazy="false">
             <column name="course_regis_id" not-null="true"/>
         </many-to-one>
-        <set name="studentList" table="course_student" inverse="false" lazy="true" cascade="all">
+        <set name="studentList" table="course_student" inverse="true" lazy="true">
             <key>
                 <column name="courseid" not-null="true"/>
             </key>

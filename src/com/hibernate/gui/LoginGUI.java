@@ -50,23 +50,145 @@ public class LoginGUI extends JFrame {
 	 * Create the frame.
 	 */
 	public LoginGUI() {
+		this.currentSemester = new CurrentSemester();
+
 		setTitle("Login");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 291, 297);
+		setBounds(100, 100, 352, 316);
 		setLocationRelativeTo(null);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
+		JPanel loginPanel = new JPanel();
+		loginPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
+		contentPane.add(loginPanel, BorderLayout.CENTER);
+		GridBagLayout gbl_loginPanel = new GridBagLayout();
+		gbl_loginPanel.columnWidths = new int[]{61, 0, 162, 0};
+		gbl_loginPanel.rowHeights = new int[]{28, 28, 18, 0, 0, 0, 0};
+		gbl_loginPanel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_loginPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		loginPanel.setLayout(gbl_loginPanel);
+
+		JLabel username_1 = new JLabel("Username");
+		username_1.setFont(new Font("Cascadia Code", Font.BOLD, 12));
+		username_1.setHorizontalAlignment(SwingConstants.CENTER);
+		GridBagConstraints gbc_username_1 = new GridBagConstraints();
+		gbc_username_1.anchor = GridBagConstraints.EAST;
+		gbc_username_1.insets = new Insets(5, 5, 5, 5);
+		gbc_username_1.gridx = 0;
+		gbc_username_1.gridy = 0;
+		loginPanel.add(username_1, gbc_username_1);
+
+		usernameField = new JTextField();
+		GridBagConstraints gbc_usernameField = new GridBagConstraints();
+		gbc_usernameField.gridwidth = 2;
+		gbc_usernameField.anchor = GridBagConstraints.NORTHWEST;
+		gbc_usernameField.insets = new Insets(5, 10, 5, 5);
+		gbc_usernameField.gridx = 1;
+		gbc_usernameField.gridy = 0;
+		loginPanel.add(usernameField, gbc_usernameField);
+		usernameField.setColumns(15);
+
+		JLabel password_1 = new JLabel("Password");
+		password_1.setFont(new Font("Cascadia Code", Font.BOLD, 12));
+		GridBagConstraints gbc_password_1 = new GridBagConstraints();
+		gbc_password_1.anchor = GridBagConstraints.EAST;
+		gbc_password_1.insets = new Insets(5, 5, 5, 5);
+		gbc_password_1.gridx = 0;
+		gbc_password_1.gridy = 1;
+		loginPanel.add(password_1, gbc_password_1);
+
+		passwordField = new JPasswordField();
+		passwordField.setColumns(15);
+		GridBagConstraints gbc_passwordField = new GridBagConstraints();
+		gbc_passwordField.gridwidth = 2;
+		gbc_passwordField.anchor = GridBagConstraints.NORTHWEST;
+		gbc_passwordField.insets = new Insets(10, 10, 5, 5);
+		gbc_passwordField.gridx = 1;
+		gbc_passwordField.gridy = 1;
+		loginPanel.add(passwordField, gbc_passwordField);
+
+		JCheckBox showpassword = new JCheckBox("Show password");
+		showpassword.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (showpassword.isSelected())
+					passwordField.setEchoChar('\0');
+				else
+					passwordField.setEchoChar('*');
+			}
+		});
+		GridBagConstraints gbc_showpassword = new GridBagConstraints();
+		gbc_showpassword.insets = new Insets(5, 5, 5, 5);
+		gbc_showpassword.gridwidth = 3;
+		gbc_showpassword.gridx = 0;
+		gbc_showpassword.gridy = 2;
+		loginPanel.add(showpassword, gbc_showpassword);
+
+		JRadioButton giaovuButton = new JRadioButton("Gi\u00E1o v\u1EE5");
+		giaovuButton.setActionCommand(giaovuButton.getText());
+		buttonGroup.add(giaovuButton);
+		GridBagConstraints gbc_giaovuButton = new GridBagConstraints();
+		gbc_giaovuButton.anchor = GridBagConstraints.EAST;
+		gbc_giaovuButton.gridwidth = 2;
+		gbc_giaovuButton.insets = new Insets(20, 5, 5, 5);
+		gbc_giaovuButton.gridx = 0;
+		gbc_giaovuButton.gridy = 3;
+		loginPanel.add(giaovuButton, gbc_giaovuButton);
+
+		JRadioButton sinhvienButton = new JRadioButton("Sinh vi\u00EAn");
+		sinhvienButton.setActionCommand(sinhvienButton.getText());
+		buttonGroup.add(sinhvienButton);
+		GridBagConstraints gbc_sinhvienButton = new GridBagConstraints();
+		gbc_sinhvienButton.insets = new Insets(20, 5, 5, 5);
+		gbc_sinhvienButton.gridx = 2;
+		gbc_sinhvienButton.gridy = 3;
+		loginPanel.add(sinhvienButton, gbc_sinhvienButton);
+
+		JLabel currentSetSemester = new JLabel("H\u1ECDc k\u00EC hi\u1EC7n t\u1EA1i");
+		currentSetSemester.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		GridBagConstraints gbc_currentSetSemester = new GridBagConstraints();
+		gbc_currentSetSemester.anchor = GridBagConstraints.EAST;
+		gbc_currentSetSemester.insets = new Insets(10, 5, 5, 5);
+		gbc_currentSetSemester.gridx = 0;
+		gbc_currentSetSemester.gridy = 4;
+		loginPanel.add(currentSetSemester, gbc_currentSetSemester);
+
+		JLabel currentSemesterDisplay = new JLabel("None");
+		currentSemesterDisplay.setFont(new Font("Times New Roman", Font.BOLD, 14));
+		GridBagConstraints gbc_currentSemesterDisplay = new GridBagConstraints();
+		gbc_currentSemesterDisplay.anchor = GridBagConstraints.WEST;
+		gbc_currentSemesterDisplay.insets = new Insets(10, 25, 5, 5);
+		gbc_currentSemesterDisplay.gridwidth = 3;
+		gbc_currentSemesterDisplay.gridx = 1;
+		gbc_currentSemesterDisplay.gridy = 4;
+		loginPanel.add(currentSemesterDisplay, gbc_currentSemesterDisplay);
+
+		JButton refreshButton = new JButton("Refresh");
+		refreshButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				currentSemesterDisplay.setText(String.format("%s (%s)",currentSemester.GetsetSemester().getTenhk()
+						,currentSemester.GetsetSemester().getNamhoc()));
+			}
+		});
+		GridBagConstraints gbc_refreshButton = new GridBagConstraints();
+		gbc_refreshButton.anchor = GridBagConstraints.WEST;
+		gbc_refreshButton.insets = new Insets(10, 0, 0, 5);
+		gbc_refreshButton.gridx = 2;
+		gbc_refreshButton.gridy = 5;
+		loginPanel.add(refreshButton, gbc_refreshButton);
+
 		JPanel buttonPanel = new JPanel();
 		contentPane.add(buttonPanel, BorderLayout.SOUTH);
 		buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 5));
 
-		JButton login = new JButton("login");
-		login.addActionListener(new ActionListener() {
+		JButton loginButton = new JButton("login");
+		loginButton.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				System.out.println("Click");
 				String username = usernameField.getText();
 				String password = new String(passwordField.getPassword());
 				GiaovuAccountEntity giaovuAccount = null;
@@ -94,7 +216,7 @@ public class LoginGUI extends JFrame {
 
 			}
 		});
-		buttonPanel.add(login);
+		buttonPanel.add(loginButton);
 
 		JButton register = new JButton("register");
 		register.addActionListener(new ActionListener() {
@@ -107,106 +229,6 @@ public class LoginGUI extends JFrame {
 		});
 		buttonPanel.add(register);
 
-		JPanel loginPanel = new JPanel();
-		loginPanel.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-		contentPane.add(loginPanel, BorderLayout.CENTER);
-		GridBagLayout gbl_loginPanel = new GridBagLayout();
-		gbl_loginPanel.columnWidths = new int[]{61, 0, 162, 0};
-		gbl_loginPanel.rowHeights = new int[]{28, 28, 18, 0, 0, 0, 0};
-		gbl_loginPanel.columnWeights = new double[]{0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gbl_loginPanel.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		loginPanel.setLayout(gbl_loginPanel);
-
-		JLabel username_1 = new JLabel("Username");
-		username_1.setFont(new Font("Cascadia Code", Font.BOLD, 12));
-		username_1.setHorizontalAlignment(SwingConstants.CENTER);
-		GridBagConstraints gbc_username_1 = new GridBagConstraints();
-		gbc_username_1.anchor = GridBagConstraints.EAST;
-		gbc_username_1.insets = new Insets(5, 5, 5, 5);
-		gbc_username_1.gridx = 0;
-		gbc_username_1.gridy = 0;
-		loginPanel.add(username_1, gbc_username_1);
-
-		usernameField = new JTextField();
-		GridBagConstraints gbc_usernameField = new GridBagConstraints();
-		gbc_usernameField.gridwidth = 2;
-		gbc_usernameField.anchor = GridBagConstraints.NORTHWEST;
-		gbc_usernameField.insets = new Insets(5, 10, 5, 0);
-		gbc_usernameField.gridx = 1;
-		gbc_usernameField.gridy = 0;
-		loginPanel.add(usernameField, gbc_usernameField);
-		usernameField.setColumns(15);
-
-		JLabel password_1 = new JLabel("Password");
-		password_1.setFont(new Font("Cascadia Code", Font.BOLD, 12));
-		GridBagConstraints gbc_password_1 = new GridBagConstraints();
-		gbc_password_1.anchor = GridBagConstraints.EAST;
-		gbc_password_1.insets = new Insets(5, 5, 5, 5);
-		gbc_password_1.gridx = 0;
-		gbc_password_1.gridy = 1;
-		loginPanel.add(password_1, gbc_password_1);
-
-		passwordField = new JPasswordField();
-		passwordField.setColumns(15);
-		GridBagConstraints gbc_passwordField = new GridBagConstraints();
-		gbc_passwordField.gridwidth = 2;
-		gbc_passwordField.anchor = GridBagConstraints.NORTHWEST;
-		gbc_passwordField.insets = new Insets(10, 10, 5, 0);
-		gbc_passwordField.gridx = 1;
-		gbc_passwordField.gridy = 1;
-		loginPanel.add(passwordField, gbc_passwordField);
-
-		JCheckBox showpassword = new JCheckBox("Show password");
-		showpassword.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				if (showpassword.isSelected())
-					passwordField.setEchoChar('\0');
-				else
-					passwordField.setEchoChar('*');
-			}
-		});
-		GridBagConstraints gbc_showpassword = new GridBagConstraints();
-		gbc_showpassword.insets = new Insets(5, 5, 5, 0);
-		gbc_showpassword.anchor = GridBagConstraints.NORTHWEST;
-		gbc_showpassword.gridwidth = 3;
-		gbc_showpassword.gridx = 0;
-		gbc_showpassword.gridy = 2;
-		loginPanel.add(showpassword, gbc_showpassword);
-
-		JRadioButton giaovuButton = new JRadioButton("Gi\u00E1o v\u1EE5");
-		giaovuButton.setActionCommand(giaovuButton.getText());
-		buttonGroup.add(giaovuButton);
-		GridBagConstraints gbc_giaovuButton = new GridBagConstraints();
-		gbc_giaovuButton.anchor = GridBagConstraints.EAST;
-		gbc_giaovuButton.gridwidth = 2;
-		gbc_giaovuButton.insets = new Insets(10, 5, 5, 5);
-		gbc_giaovuButton.gridx = 0;
-		gbc_giaovuButton.gridy = 3;
-		loginPanel.add(giaovuButton, gbc_giaovuButton);
-
-		JRadioButton sinhvienButton = new JRadioButton("Sinh vi\u00EAn");
-		sinhvienButton.setActionCommand(sinhvienButton.getText());
-		buttonGroup.add(sinhvienButton);
-		GridBagConstraints gbc_sinhvienButton = new GridBagConstraints();
-		gbc_sinhvienButton.insets = new Insets(10, 5, 5, 0);
-		gbc_sinhvienButton.gridx = 2;
-		gbc_sinhvienButton.gridy = 3;
-		loginPanel.add(sinhvienButton, gbc_sinhvienButton);
-
-		JLabel lblNewLabel = new JLabel("New label");
-		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
-		gbc_lblNewLabel.insets = new Insets(10, 5, 0, 5);
-		gbc_lblNewLabel.gridx = 0;
-		gbc_lblNewLabel.gridy = 4;
-		loginPanel.add(lblNewLabel, gbc_lblNewLabel);
-
-		JLabel lblNewLabel_1 = new JLabel("New label");
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.insets = new Insets(10, 5, 0, 5);
-		gbc_lblNewLabel_1.gridwidth = 3;
-		gbc_lblNewLabel_1.gridx = 1;
-		gbc_lblNewLabel_1.gridy = 4;
-		loginPanel.add(lblNewLabel_1, gbc_lblNewLabel_1);  
 	}
 	class CurrentSemester {
 		private SemesterEntity setSesmer;

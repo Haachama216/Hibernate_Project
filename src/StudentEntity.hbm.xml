@@ -27,7 +27,7 @@
         <property name="gioitinh">
             <column name="gioitinh" sql-type="varchar(6)" length="6"/>
         </property>
-        <set name="courseList" table="course_student" inverse="true" lazy="true">
+        <set name="courseList" table="course_student" inverse="false" lazy="true" cascade="save-update">
             <key>
                 <column name="studentid" not-null="true"/>
             </key>

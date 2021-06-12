@@ -289,7 +289,7 @@ public class MainFrame extends JFrame {
 				frame.setVisible(true);
 			}
 		});
-		semesterAddButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		semesterAddButton.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
 		GridBagConstraints gbc_semesterAddButton = new GridBagConstraints();
 		gbc_semesterAddButton.insets = new Insets(0, 5, 0, 5);
 		gbc_semesterAddButton.gridx = 0;
@@ -323,7 +323,7 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
-				semesterSetButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+				semesterSetButton.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
 				GridBagConstraints gbc_semesterSetButton = new GridBagConstraints();
 				gbc_semesterSetButton.insets = new Insets(0, 5, 0, 5);
 				gbc_semesterSetButton.gridx = 1;
@@ -353,7 +353,7 @@ public class MainFrame extends JFrame {
 			}
 		});
 		
-				semesterDeleteButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
+				semesterDeleteButton.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
 				GridBagConstraints gbc_semesterDeleteButton = new GridBagConstraints();
 				gbc_semesterDeleteButton.insets = new Insets(0, 5, 0, 0);
 				gbc_semesterDeleteButton.gridx = 2;
@@ -586,7 +586,7 @@ public class MainFrame extends JFrame {
 							"None of row selected",JOptionPane.ERROR_MESSAGE);
 				}
 				else {
-					selectedRow = subjectTable.convertRowIndexToModel(selectedRow);
+					selectedRow = classTable.convertRowIndexToModel(selectedRow);
 					DefaultTableModel model = (DefaultTableModel) classTable.getModel();
 					TableRowSorter<DefaultTableModel> sorter = GetNewSorter(model);
 					classTable.setRowSorter(null);
@@ -1120,13 +1120,30 @@ public class MainFrame extends JFrame {
 		gbc_courseDeleteButton.gridy = 0;
 		panel_1.add(courseDeleteButton, gbc_courseDeleteButton);
 		
-		JButton studentList = new JButton("Students in course");
-		studentList.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
-		GridBagConstraints gbc_studentList = new GridBagConstraints();
-		gbc_studentList.insets = new Insets(5, 5, 5, 5);
-		gbc_studentList.gridx = 4;
-		gbc_studentList.gridy = 0;
-		panel_1.add(studentList, gbc_studentList);
+		JButton registeredStudentListButton = new JButton("Students in course");
+		registeredStudentListButton.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				int selectedRow = coursetable.getSelectedRow();
+				if (selectedRow == -1) {
+					JOptionPane.showMessageDialog(null,"Select a row first",
+							"None of row selected",JOptionPane.ERROR_MESSAGE);
+				}
+				else {
+					selectedRow = coursetable.convertRowIndexToModel(selectedRow);
+					DefaultTableModel model = (DefaultTableModel) coursetable.getModel();
+					CourseEntity course = CourseDAO.Get((int) model.getValueAt(selectedRow,0));
+					RegisterdStudentList frame = new RegisterdStudentList(course);
+					frame.setVisible(true);
+				}
+			}
+		});
+		registeredStudentListButton.setFont(new Font("Segoe UI Semibold", Font.BOLD, 14));
+		GridBagConstraints gbc_registeredStudentListButton = new GridBagConstraints();
+		gbc_registeredStudentListButton.insets = new Insets(5, 5, 5, 5);
+		gbc_registeredStudentListButton.gridx = 4;
+		gbc_registeredStudentListButton.gridy = 0;
+		panel_1.add(registeredStudentListButton, gbc_registeredStudentListButton);
 		
 		JScrollPane course_ScrollPane = new JScrollPane();
 		GridBagConstraints gbc_course_ScrollPane = new GridBagConstraints();

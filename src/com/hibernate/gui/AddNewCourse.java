@@ -246,7 +246,7 @@ public class AddNewCourse extends JFrame {
 					if (dayComboBox.getSelectedItem().toString().equals("chủ nhật"))
 						course.setDay(dayComboBox.getSelectedItem().toString());
 					else
-						course.setDay("Thứ " + dayComboBox.getSelectedItem().toString());
+						course.setDay(String.format("Thứ %s",dayComboBox.getSelectedItem().toString()));
 					course.setTime(timeComboBox.getSelectedItem().toString());
 					course.setMaxSlot(Integer.parseInt(slotField.getText()));
 					CourseDAO.Save(course);

@@ -37,6 +37,15 @@ public class CourseEntity {
         this.studentList = studentList;
     }
 
+    public void addStudent(StudentEntity student) {
+        studentList.add(student);
+        student.getCourseList().add(this);
+    }
+
+    public void removeStudent(StudentEntity student) {
+        studentList.remove(student);
+        student.getCourseList().remove(this);
+    }
     public int getCourseid() {
         return courseid;
     }

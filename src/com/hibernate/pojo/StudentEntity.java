@@ -25,7 +25,15 @@ public class StudentEntity {
         this.gioitinh = gioitinh;
         this.classEntity = classEntity;
     }
+    public void addCourse(CourseEntity course) {
+        courseList.add(course);
+        course.getStudentList().add(this);
+    }
 
+    public void removeCourse(CourseEntity course) {
+        courseList.remove(course);
+        course.getStudentList().remove(this);
+    }
     public int getStudentid() {
         return studentid;
     }
